@@ -1,10 +1,10 @@
-# template-web-project
-Template web project application
+# template-project-springboot
+Template project for springboot apps
 
 License
 =======
  
-    Copyright (c) 2015 Denis O <denis@universal-development.com>
+    Copyright (c) 2016 Denis O <denis@universal-development.com>
  
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
