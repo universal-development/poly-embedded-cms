@@ -22,7 +22,8 @@ apply plugin: "com.gorylenko.gradle-git-properties"
 apply from: 'http://dev.local/gradle/defaultRepositories.groovy'
 
 jar {
-	baseName = 'projectname'
+	baseName = project.name
+    version = project.version
 }
 
 sourceCompatibility = 1.8
