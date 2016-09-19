@@ -19,8 +19,6 @@ apply plugin: 'eclipse'
 apply plugin: 'spring-boot'
 apply plugin: "com.gorylenko.gradle-git-properties"
 
-apply from: 'http://dev.local/gradle/defaultRepositories.groovy'
-
 jar {
 	baseName = project.name
     version = project.version

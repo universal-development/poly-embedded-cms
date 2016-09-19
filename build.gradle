@@ -2,5 +2,7 @@ group = 'com.unidev.projectname'
 version = '0.0.1-SNAPSHOT'
 
 subprojects {
-
+    apply from: 'http://dev.local/gradle/uploadArchivesSftp.groovy'
+    apply from: 'http://dev.local/gradle/defaultRepositories.groovy'
+    apply from: 'http://dev.local/gradle/javadoc.groovy'
 }
