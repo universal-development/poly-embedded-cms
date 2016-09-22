@@ -44,6 +44,8 @@ def unidevPlatformVersion = "2.0.0"
 
 dependencies {
 
+	compile project(":project-model")
+
 	compile "com.unidev.platform:unidev-spring-common:$unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-j2ee-common:$unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-utils:$unidevPlatformVersion"

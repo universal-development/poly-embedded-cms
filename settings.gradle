@@ -1,2 +1,2 @@
-include "model"
-include "app"
+include "project-model"
+include "project-app"
