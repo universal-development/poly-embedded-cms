@@ -1,7 +1,7 @@
 
 subprojects {
 
-    group = 'com.unidev.projectname'
+    group = 'com.unidev.polyembeddedcms'
     version = '0.0.1-SNAPSHOT'
 
     apply plugin: 'maven'

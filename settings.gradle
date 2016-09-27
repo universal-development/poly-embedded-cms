@@ -1,2 +1,3 @@
-include "project-model"
-include "project-app"
+
+include "polycms-core"
+include "polycms-app-hateoas"

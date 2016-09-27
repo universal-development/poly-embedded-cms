@@ -1,5 +1,6 @@
-# template-project-springboot
-Template project for springboot apps
+# Content management for polydata records
+
+Service for management of polydata records stored in SQLite databases
 
 License
 =======
