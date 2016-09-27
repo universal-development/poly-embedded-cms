@@ -1,0 +1,6 @@
+
+dependencies {
+	compile "com.unidev.polydata:polydata-storage-sqlite:$project.polydataStorageVersion"
+	compile "com.unidev.platform:unidev-spring-common:$project.unidevPlatformVersion"
+}
+
