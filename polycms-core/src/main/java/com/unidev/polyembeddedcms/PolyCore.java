@@ -15,20 +15,65 @@ public class PolyCore {
     public static final String INDEX_FILE = "index.json";
     private String storageRoot;
 
+    // specific tenant operations
+
+    /**
+     * Fetch storage root file for specific tenant
+     * @param tenantName
+     * @return
+     */
     public File fetchStorageRoot(String tenantName) {
         File storageFile = new File(storageRoot + "/" + tenantName);
         return storageFile;
     }
 
-    public void createTenantSorage(String tenantName) {
-        File tenantIndexFile = new File(storageRoot + "/" + INDEX_FILE);
+    // Tenant index operations
 
+    /**
+     * Fetch tenants indexes file
+     * @return
+     */
+    private File fetchTenantIndexFile() {
+        return new File(storageRoot + "/" + INDEX_FILE);
+    }
+
+    /**
+     * Fetch tenant index storage
+     * @return
+     */
+    public FlatFileStorage fetchTenantIndex() {
+        File tenantIndexFile = fetchTenantIndexFile();
         FlatFileStorage tenantIndex =
                 FlatFileStorageMapper.storageMapper().loadSource(tenantIndexFile).load();
+        return tenantIndex;
+    }
 
-        tenantIndex.add(new BasicPoly()._id(tenantName));
+    /**
+     * Register a storage for specific tenant
+     * @param tenantName
+     */
+    public void createTenantSorage(String tenantName) {
+        FlatFileStorage tenantIndex = fetchTenantIndex();
+        if (tenantIndex.hasPoly(tenantName)) {
+            return;
+        }
+        tenantIndex.add(new BasicPoly()._id(tenantName).link(tenantName));
+        FlatFileStorageMapper.storageMapper().saveSource(fetchTenantIndexFile()).save(tenantIndex);
 
-        FlatFileStorageMapper.storageMapper().saveSource(tenantIndexFile).save(tenantIndex);
+        fetchStorageRoot(tenantName).mkdirs();
+    }
+
+    /**
+     * Remove tenant from tenant index
+     * @param tenantName
+     */
+    public void removeTenantStirage(String tenantName) {
+        FlatFileStorage tenantIndex = fetchTenantIndex();
+        if (!tenantIndex.hasPoly(tenantName)) {
+            return;
+        }
+        tenantIndex.remove(tenantName);
+        FlatFileStorageMapper.storageMapper().saveSource(fetchTenantIndexFile()).save(tenantIndex);
     }
 
     // ========================
