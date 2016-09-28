@@ -12,7 +12,9 @@ import java.io.File;
  */
 @Service
 public class PolyCore {
+
     public static final String INDEX_FILE = "index.json";
+
     private String storageRoot;
 
     // specific tenant operations
@@ -76,7 +78,7 @@ public class PolyCore {
         FlatFileStorageMapper.storageMapper().saveSource(fetchTenantIndexFile()).save(tenantIndex);
     }
 
-    // ========================
+    //
 
     public String getStorageRoot() {
         return storageRoot;
