@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 
 /**
- * Service for poly tenants management
+ * PolyCore - Service for poly tenants management
  */
 @Service
 public class PolyCore {
