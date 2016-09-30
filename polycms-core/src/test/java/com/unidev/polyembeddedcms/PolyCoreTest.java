@@ -20,6 +20,7 @@ public class PolyCoreTest {
     @Before
     public void setup() {
         polyCore = new PolyCore();
+        temporaryFolder.getRoot().mkdirs();
         polyCore.setStorageRoot(temporaryFolder.getRoot().getAbsolutePath());
     }
 
