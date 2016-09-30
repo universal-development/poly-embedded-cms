@@ -3,6 +3,8 @@ package com.unidev.polyembeddedcms;
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.FlatFileStorageMapper;
 import com.unidev.polydata.domain.BasicPoly;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -12,6 +14,8 @@ import java.io.File;
  */
 @Service
 public class PolyCore {
+
+    private static Logger LOG = LoggerFactory.getLogger(PolyCore.class);
 
     public static final String INDEX_FILE = "index.json";
 
@@ -35,8 +39,19 @@ public class PolyCore {
      * Fetch tenants indexes file
      * @return
      */
-    private File fetchTenantIndexFile() {
+    public File fetchTenantIndexFile() {
         return new File(storageRoot + "/" + INDEX_FILE);
+    }
+
+    /**
+     * Create tenant index file
+     */
+    public void createIfNotExistTenantIndexFile() {
+        File file = fetchTenantIndexFile();
+        if (file.exists()) {
+            return;
+        }
+        FlatFileStorageMapper.storageMapper().saveSource(file).save(new FlatFileStorage());
     }
 
     /**
