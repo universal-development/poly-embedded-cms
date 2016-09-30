@@ -4,6 +4,7 @@ dependencies {
 	compile "com.unidev.polydata:polydata-flat-file-storage:$project.polydataStorageVersion"
 	compile "com.unidev.platform:unidev-spring-common:$project.unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-exception:$project.unidevPlatformVersion"
+	compile "com.unidev.platform:unidev-logger:$project.unidevPlatformVersion"
 
 	testCompile 'junit:junit:4.12'
 	testCompile 'org.hamcrest:hamcrest-all:1.3'
