@@ -49,6 +49,7 @@ public class PolyCore {
     public void createIfNotExistTenantIndexFile() {
         File file = fetchTenantIndexFile();
         if (file.exists()) {
+            LOG.warn("Index file already exists, skip creation");
             return;
         }
         FlatFileStorageMapper.storageMapper().saveSource(file).save(new FlatFileStorage());
@@ -72,6 +73,7 @@ public class PolyCore {
     public void createTenantStorage(String tenantName) {
         FlatFileStorage tenantIndex = fetchTenantIndex();
         if (tenantIndex.hasPoly(tenantName)) {
+            LOG.warn("Tenant index already have tenant {}", tenantName);
             return;
         }
         tenantIndex.add(new BasicPoly()._id(tenantName).link(tenantName));
@@ -87,6 +89,7 @@ public class PolyCore {
     public void removeTenantStorage(String tenantName) {
         FlatFileStorage tenantIndex = fetchTenantIndex();
         if (!tenantIndex.hasPoly(tenantName)) {
+            LOG.warn("Tenant index dont have tenant {}", tenantName);
             return;
         }
         tenantIndex.remove(tenantName);
