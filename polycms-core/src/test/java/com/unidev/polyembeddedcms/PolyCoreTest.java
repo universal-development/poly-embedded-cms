@@ -25,19 +25,35 @@ public class PolyCoreTest {
     }
 
     @Test
-    public void testPolyTenantAdding() {
-
-        String tenant = "tenan";
-
+    public void testPolyTenantAddRemove() {
+        String tenant = "tenant";
         FlatFileStorage flatFileStorage = polyCore.fetchTenantIndex();
         assertThat(flatFileStorage.hasPoly(tenant), is(false));
 
-        polyCore.createTenantSorage(tenant);
+        polyCore.createTenantStorage(tenant);
 
         flatFileStorage = polyCore.fetchTenantIndex();
-
         assertThat(flatFileStorage.hasPoly(tenant), is(true));
 
+        // twice adding
+        polyCore.createTenantStorage(tenant);
+
+        flatFileStorage = polyCore.fetchTenantIndex();
+        assertThat(flatFileStorage.hasPoly(tenant), is(true));
+
+        polyCore.removeTenantStorage(tenant);
+
+        flatFileStorage = polyCore.fetchTenantIndex();
+        assertThat(flatFileStorage.hasPoly(tenant), is(false));
+
+        // twice removal, test if things remains as is
+
+        polyCore.removeTenantStorage(tenant);
+
+        flatFileStorage = polyCore.fetchTenantIndex();
+        assertThat(flatFileStorage.hasPoly(tenant), is(false));
     }
+
+
 
 }

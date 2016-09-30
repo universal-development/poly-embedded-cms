@@ -69,7 +69,7 @@ public class PolyCore {
      * Register a storage for specific tenant
      * @param tenantName
      */
-    public void createTenantSorage(String tenantName) {
+    public void createTenantStorage(String tenantName) {
         FlatFileStorage tenantIndex = fetchTenantIndex();
         if (tenantIndex.hasPoly(tenantName)) {
             return;
@@ -84,7 +84,7 @@ public class PolyCore {
      * Remove tenant from tenant index
      * @param tenantName
      */
-    public void removeTenantStirage(String tenantName) {
+    public void removeTenantStorage(String tenantName) {
         FlatFileStorage tenantIndex = fetchTenantIndex();
         if (!tenantIndex.hasPoly(tenantName)) {
             return;
