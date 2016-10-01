@@ -12,7 +12,6 @@ import java.io.File;
 /**
  * PolyCore - Service for poly tenants management
  */
-@Service
 public class PolyCore {
 
     private static Logger LOG = LoggerFactory.getLogger(PolyCore.class);
