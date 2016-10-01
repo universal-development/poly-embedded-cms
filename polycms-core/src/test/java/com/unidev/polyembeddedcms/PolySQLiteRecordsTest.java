@@ -4,6 +4,8 @@ import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
 import com.unidev.polydata.domain.BasicPoly;
@@ -37,7 +39,7 @@ public class PolySQLiteRecordsTest {
     }
 
     @Test
-    public void testContentGeneration() throws SQLiteStorageException, SQLException {
+    public void testContentGeneration() throws SQLiteStorageException, SQLException, JsonProcessingException {
         String tenant = "testTenant";
 
         polyCore.createTenantStorage(tenant);
@@ -54,9 +56,12 @@ public class PolySQLiteRecordsTest {
         data.put("url", "http://google.com");
 
 
+        ObjectMapper objectMapper = new ObjectMapper();
+        String strData = objectMapper.writeValueAsString(data);
+
 
         PolyRecord polyRecord = new PolyRecord()
-                ._id("tomato").label("Tomato").data(data);
+                ._id("tomato").label("Tomato").data(strData);
 
         sqLiteStorage.save("tomato", polyRecord);
 
@@ -68,7 +73,9 @@ public class PolySQLiteRecordsTest {
         assertThat(polyList.size(), is(1));
 
         BasicPoly basicPoly = polyList.get(0);
-        System.out.println(basicPoly+"");
+        assertThat(basicPoly, is(not(nullValue())));
+        assertThat(basicPoly._id(), is("tomato"));
+        assertThat(basicPoly.get("label"), is("Tomato"));
     }
 
 }
