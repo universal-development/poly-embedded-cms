@@ -50,8 +50,13 @@ public class PolySQLiteRecordsTest {
         sqLiteStorage.setPolyMigrators(PolySQLiteMigrator.sqLitePolyMigratorList());
 
 
+        HashMap<String, Object> data = new HashMap<>();
+        data.put("url", "http://google.com");
+
+
+
         PolyRecord polyRecord = new PolyRecord()
-                ._id("tomato").label("Tomato").data(new HashMap<>());
+                ._id("tomato").label("Tomato").data(data);
 
         sqLiteStorage.save("tomato", polyRecord);
 
@@ -61,6 +66,9 @@ public class PolySQLiteRecordsTest {
         List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
 
         assertThat(polyList.size(), is(1));
+
+        BasicPoly basicPoly = polyList.get(0);
+        System.out.println(basicPoly+"");
     }
 
 }
