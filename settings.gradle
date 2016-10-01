@@ -1,3 +1,3 @@
-
+include "polycms-model"
 include "polycms-core"
 include "polycms-app-hateoas"
