@@ -16,6 +16,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -49,11 +50,10 @@ public class PolySQLiteRecordsTest {
         sqLiteStorage.setPolyMigrators(PolySQLiteMigrator.sqLitePolyMigratorList());
 
 
-        BasicPoly record = new BasicPoly()._id("tomato");
-        record.put("label", "Tomato");
-        record.put("data", new BasicPoly());
+        PolyRecord polyRecord = new PolyRecord()
+                ._id("tomato").label("Tomato").data(new HashMap<>());
 
-        sqLiteStorage.save("tomato", record);
+        sqLiteStorage.save("tomato", polyRecord);
 
         Connection connection = sqLiteStorage.openDb();
         PreparedStatement preparedStatement = connection.prepareStatement("SELECT * FROM tomato;");
