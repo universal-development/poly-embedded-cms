@@ -16,12 +16,12 @@ import java.util.stream.Stream;
  * Default SQLite poly migrator, create poly table with (_id, label, json)
  *
  */
-public class PolySQLiteMigrator implements SQLitePolyMigrator {
+public class JSONColumnPolyMigrator implements SQLitePolyMigrator {
 
-    private static Logger LOG = LoggerFactory.getLogger(PolySQLiteMigrator.class);
+    private static Logger LOG = LoggerFactory.getLogger(JSONColumnPolyMigrator.class);
 
     public static List<SQLitePolyMigrator> sqLitePolyMigratorList() {
-        return Stream.of(new PolySQLiteMigrator()).collect(Collectors.toList());
+        return Stream.of(new JSONColumnPolyMigrator()).collect(Collectors.toList());
     }
 
     @Override

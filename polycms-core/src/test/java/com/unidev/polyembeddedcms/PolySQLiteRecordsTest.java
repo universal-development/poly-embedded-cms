@@ -47,7 +47,7 @@ public class PolySQLiteRecordsTest {
         File db = new File(root, "poly.db");
 
         SQLiteStorage sqLiteStorage = new SQLiteStorage(db.getPath());
-        sqLiteStorage.setPolyMigrators(PolySQLiteMigrator.sqLitePolyMigratorList());
+        sqLiteStorage.setPolyMigrators(JSONColumnPolyMigrator.sqLitePolyMigratorList());
 
 
         HashMap<String, Object> data = new HashMap<>();
