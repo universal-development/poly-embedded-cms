@@ -5,6 +5,7 @@ dependencies {
 	compile "com.unidev.platform:unidev-spring-common:$project.unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-exception:$project.unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-logger:$project.unidevPlatformVersion"
+	compile group: 'commons-io', name: 'commons-io', version: '2.5'
 
 	compile project(":polycms-model")
 

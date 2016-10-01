@@ -34,8 +34,7 @@ public class PolySQLiteRecordsTest {
     @Before
     public void setup() {
         polyCore = new PolyCore();
-        polyCore.setStorageRoot(temporaryFolder.getRoot().getAbsolutePath());
-        polyCore.createIfNotExistTenantIndexFile();
+        polyCore.setStorageRoot(temporaryFolder.getRoot());
     }
 
     @Test

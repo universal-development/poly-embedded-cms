@@ -3,6 +3,7 @@ package com.unidev.polyembeddedcms;
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.FlatFileStorageMapper;
 import com.unidev.polydata.domain.BasicPoly;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class PolyCore {
 
     public static final String INDEX_FILE = "index.json";
 
-    private String storageRoot;
+    private File storageRoot;
 
     // specific tenant operations
 
@@ -28,41 +29,19 @@ public class PolyCore {
      * @return
      */
     public File fetchStorageRoot(String tenantName) {
-        File storageFile = new File(storageRoot + "/" + tenantName);
-        return storageFile;
+        return new File(storageRoot, tenantName);
     }
 
     // Tenant index operations
 
     /**
-     * Fetch tenants indexes file
+     * Check if tenant storage exist
+     * @param tenantName
      * @return
      */
-    public File fetchTenantIndexFile() {
-        return new File(storageRoot + "/" + INDEX_FILE);
-    }
-
-    /**
-     * Create tenant index file
-     */
-    public void createIfNotExistTenantIndexFile() {
-        File file = fetchTenantIndexFile();
-        if (file.exists()) {
-            LOG.warn("Index file already exists, skip creation");
-            return;
-        }
-        FlatFileStorageMapper.storageMapper().saveSource(file).save(new FlatFileStorage());
-    }
-
-    /**
-     * Fetch tenant index storage
-     * @return
-     */
-    public FlatFileStorage fetchTenantIndex() {
-        File tenantIndexFile = fetchTenantIndexFile();
-        FlatFileStorage tenantIndex =
-                FlatFileStorageMapper.storageMapper().loadSource(tenantIndexFile).load();
-        return tenantIndex;
+    public boolean existTenant(String tenantName) {
+        File tenantRoot = fetchStorageRoot(tenantName);
+        return tenantRoot.exists();
     }
 
     /**
@@ -70,15 +49,16 @@ public class PolyCore {
      * @param tenantName
      */
     public void createTenantStorage(String tenantName) {
-        FlatFileStorage tenantIndex = fetchTenantIndex();
-        if (tenantIndex.hasPoly(tenantName)) {
+        File tenantRoot = fetchStorageRoot(tenantName);
+        if (tenantRoot.exists()) {
             LOG.warn("Tenant index already have tenant {}", tenantName);
             return;
         }
-        tenantIndex.add(new BasicPoly()._id(tenantName).link(tenantName));
-        FlatFileStorageMapper.storageMapper().saveSource(fetchTenantIndexFile()).save(tenantIndex);
 
-        fetchStorageRoot(tenantName).mkdirs();
+        tenantRoot.mkdirs();
+        FlatFileStorage flatFileStorage = new FlatFileStorage();
+        flatFileStorage.metadata().put("tenant", tenantName);
+        FlatFileStorageMapper.storageMapper().saveSource(new File(tenantRoot, INDEX_FILE)).save(flatFileStorage);
     }
 
     /**
@@ -86,22 +66,22 @@ public class PolyCore {
      * @param tenantName
      */
     public void removeTenantStorage(String tenantName) {
-        FlatFileStorage tenantIndex = fetchTenantIndex();
-        if (!tenantIndex.hasPoly(tenantName)) {
-            LOG.warn("Tenant index dont have tenant {}", tenantName);
+        File tenantRoot = fetchStorageRoot(tenantName);
+        if (!tenantRoot.exists()) {
+            LOG.warn("Tenant index don't have tenant {}", tenantName);
             return;
         }
-        tenantIndex.remove(tenantName);
-        FlatFileStorageMapper.storageMapper().saveSource(fetchTenantIndexFile()).save(tenantIndex);
+        FileUtils.deleteQuietly(tenantRoot);
     }
 
     //
 
-    public String getStorageRoot() {
+
+    public File getStorageRoot() {
         return storageRoot;
     }
 
-    public void setStorageRoot(String storageRoot) {
+    public void setStorageRoot(File storageRoot) {
         this.storageRoot = storageRoot;
     }
 }

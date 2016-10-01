@@ -1,14 +1,13 @@
 package com.unidev.polyembeddedcms;
 
 
-import com.unidev.polydata.FlatFileStorage;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 public class PolyCoreTest {
 
@@ -20,38 +19,34 @@ public class PolyCoreTest {
     @Before
     public void setup() {
         polyCore = new PolyCore();
-        polyCore.setStorageRoot(temporaryFolder.getRoot().getAbsolutePath());
-        polyCore.createIfNotExistTenantIndexFile();
+        polyCore.setStorageRoot(temporaryFolder.getRoot());
     }
 
     @Test
     public void testPolyTenantAddRemove() {
         String tenant = "tenant";
-        FlatFileStorage flatFileStorage = polyCore.fetchTenantIndex();
-        assertThat(flatFileStorage.hasPoly(tenant), is(false));
+
+        assertThat(polyCore.existTenant(tenant), is(false));
 
         polyCore.createTenantStorage(tenant);
 
-        flatFileStorage = polyCore.fetchTenantIndex();
-        assertThat(flatFileStorage.hasPoly(tenant), is(true));
+        assertThat(polyCore.existTenant(tenant), is(true));
 
         // twice adding
         polyCore.createTenantStorage(tenant);
 
-        flatFileStorage = polyCore.fetchTenantIndex();
-        assertThat(flatFileStorage.hasPoly(tenant), is(true));
+        assertThat(polyCore.existTenant(tenant), is(true));
 
         polyCore.removeTenantStorage(tenant);
 
-        flatFileStorage = polyCore.fetchTenantIndex();
-        assertThat(flatFileStorage.hasPoly(tenant), is(false));
+        assertThat(polyCore.existTenant(tenant), is(false));
 
         // twice removal, test if things remains as is
 
         polyCore.removeTenantStorage(tenant);
 
-        flatFileStorage = polyCore.fetchTenantIndex();
-        assertThat(flatFileStorage.hasPoly(tenant), is(false));
+        assertThat(polyCore.existTenant(tenant), is(false));
+
     }
 
 
