@@ -8,6 +8,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Default SQLite poly migrator, create poly table with (_id, label, json)
@@ -17,6 +20,9 @@ public class PolySQLiteMigrator implements SQLitePolyMigrator {
 
     private static Logger LOG = LoggerFactory.getLogger(PolySQLiteMigrator.class);
 
+    public static List<SQLitePolyMigrator> sqLitePolyMigratorList() {
+        return Stream.of(new PolySQLiteMigrator()).collect(Collectors.toList());
+    }
 
     @Override
     public boolean canHandle(String poly) {
@@ -28,7 +34,7 @@ public class PolySQLiteMigrator implements SQLitePolyMigrator {
     public void handle(String poly, Connection connection) throws SQLiteStorageException {
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), value JSON)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), data JSON)");
         } catch (SQLException e) {
             LOG.warn("Failed to run migration", e);
             throw new SQLiteStorageException(e);
