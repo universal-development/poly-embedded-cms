@@ -69,6 +69,7 @@ public class PolySQLiteRecordsTest {
 
         List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
 
+        assertThat(polyList, is(notNullValue()));
         assertThat(polyList.size(), is(1));
 
         BasicPoly basicPoly = polyList.get(0);
