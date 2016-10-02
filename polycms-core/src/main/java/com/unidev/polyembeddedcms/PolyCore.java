@@ -80,7 +80,7 @@ public class PolyCore {
      * List available storages
      * @return
      */
-    public List<String> listStorages() {
+    public List<String> listTenants() {
         return Arrays.asList(storageRoot.list());
     }
 
