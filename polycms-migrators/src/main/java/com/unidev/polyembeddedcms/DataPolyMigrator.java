@@ -24,7 +24,7 @@ public class DataPolyMigrator implements SQLitePolyMigrator {
     public void handle(String poly, Connection connection) throws SQLiteStorageException {
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), date NUMERIC,  data JSON)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), category VARCHAR(255), tags VARCHAR(255), date NUMERIC,  data JSON)");
         } catch (SQLException e) {
             LOG.warn("Failed to run data migration ", e);
             throw new SQLiteStorageException(e);
