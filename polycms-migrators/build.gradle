@@ -1,0 +1,15 @@
+
+dependencies {
+	compile "com.unidev.polydata:polydata-storage-sqlite:$project.polydataStorageVersion"
+	compile "com.unidev.polydata:polydata-flat-file-storage:$project.polydataStorageVersion"
+	compile "com.unidev.platform:unidev-spring-common:$project.unidevPlatformVersion"
+	compile "com.unidev.platform:unidev-exception:$project.unidevPlatformVersion"
+	compile "com.unidev.platform:unidev-logger:$project.unidevPlatformVersion"
+
+	compile project(":polycms-model")
+
+	testCompile 'junit:junit:4.12'
+	testCompile 'org.hamcrest:hamcrest-all:1.3'
+	testCompile 'org.mockito:mockito-all:1.10.19'
+}
+
