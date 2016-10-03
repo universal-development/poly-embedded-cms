@@ -9,7 +9,9 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-
+/**
+ * Categories poly records
+ */
 public class CategoryPolyMigrator implements SQLitePolyMigrator {
     private static Logger LOG = LoggerFactory.getLogger(CategoryPolyMigrator.class);
     @Override
@@ -21,7 +23,7 @@ public class CategoryPolyMigrator implements SQLitePolyMigrator {
     public void handle(String poly, Connection connection) throws SQLiteStorageException {
         try {
             Statement statement = connection.createStatement();
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), count INTEGER,  data JSON)");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS "+poly+" (_id VARCHAR(255) PRIMARY KEY, label VARCHAR(255), count INTEGER)");
         } catch (SQLException e) {
             LOG.warn("Failed to run categories migration ", e);
             throw new SQLiteStorageException(e);
