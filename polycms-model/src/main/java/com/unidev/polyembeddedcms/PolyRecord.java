@@ -2,14 +2,12 @@ package com.unidev.polyembeddedcms;
 
 
 import com.unidev.polydata.domain.BasicPoly;
+import static com.unidev.polyembeddedcms.PolyConstants.*;
 
 /**
  * Basic poly record managed by CMS
  */
 public class PolyRecord extends BasicPoly {
-
-    public static final String LABEL_KEY = "label";
-    public static final String DATA_KEY = "data";
 
     public PolyRecord _id(String _id) {
         super._id(_id);
@@ -34,6 +32,22 @@ public class PolyRecord extends BasicPoly {
         return this;
     }
 
+    public <T> T count() {
+        return fetch(COUNT_KEY);
+    }
 
+    public <T> PolyRecord count(T count) {
+        put(COUNT_KEY, count);
+        return this;
+    }
+
+    public <T> T date() {
+        return fetch(DATA_KEY);
+    }
+
+    public <T> PolyRecord date(T date) {
+        put(DATA_KEY, date);
+        return this;
+    }
 
 }
