@@ -8,6 +8,7 @@ import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyRecord;
 import com.unidev.polyembeddedcms.TagsPolyMigrator;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -36,21 +37,26 @@ public class ProjectnameApplicationTests {
 	@Autowired
 	private PolyCore polyCore;
 
+	private File root;
+	private String domain = "test.com";
+	private File dbFile;
+
+	@Before
+	public void init() {
+		root = polyCore.fetchStorageRoot(domain);
+		root.mkdirs();
+
+		dbFile = new File(root, PolyConstants.DB_FILE);
+		dbFile.deleteOnExit();
+	}
 
 	@Test
 	public void contextLoads() {
-
 
 	}
 
 	@Test
 	public void testTagsListing() throws MalformedURLException, SQLiteStorageException {
-		String domain = "test.com";
-		File root = polyCore.fetchStorageRoot(domain);
-		root.mkdirs();
-
-		File dbFile = new File(root, PolyConstants.DB_FILE);
-		dbFile.deleteOnExit();
 		SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
 		sqLiteStorage.setPolyMigrators(Arrays.asList(new TagsPolyMigrator()));
 
@@ -72,7 +78,10 @@ public class ProjectnameApplicationTests {
 
 		assertThat(first.get(PolyConstants.COUNT_KEY), is(100));
 		assertThat(first._id(), is("tomato"));
+	}
 
+	@Test
+	public void testPolyLoading() {
 
 	}
 
