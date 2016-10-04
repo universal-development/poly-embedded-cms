@@ -32,6 +32,32 @@ public class WebPolyCore {
     private WebUtils webUtils;
 
 
+    /**
+     * Fetch categories records
+     * @param httpServletRequest
+     * @return
+     */
+    public List<BasicPoly> fetchCategories(HttpServletRequest httpServletRequest) {
+        SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
+
+        PreparedStatement preparedStatement;
+        try(Connection connection = sqLiteStorage.openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.CATEGORY_POLY);
+            List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
+            return polyList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.warn("Failed to fetch categories for request {}", httpServletRequest);
+            return null;
+        }
+
+    }
+
+    /**
+     * Fetch tags from poly store
+     * @param httpServletRequest
+     * @return
+     */
     public List<BasicPoly> fetchTags(HttpServletRequest httpServletRequest) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
 
