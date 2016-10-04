@@ -31,6 +31,48 @@ public class WebPolyCore {
     @Autowired
     private WebUtils webUtils;
 
+
+    public List<BasicPoly> fetchTags(HttpServletRequest httpServletRequest) {
+        SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
+
+        PreparedStatement preparedStatement;
+        try(Connection connection = sqLiteStorage.openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.TAGS_POLY);
+            List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
+            return polyList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.warn("Failed to fetch tags for request {}", httpServletRequest);
+            return null;
+        }
+
+    }
+
+    /**
+     * Fetch poly by ID
+     * @param id
+     * @param httpServletRequest
+     * @return poly instance or null if poly is not available
+     */
+    public Poly fetchPoly(String id, HttpServletRequest httpServletRequest) {
+        SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
+
+        PreparedStatement preparedStatement;
+        try(Connection connection = sqLiteStorage.openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?");
+            preparedStatement.setObject(1, id);
+            List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
+            if (polyList.size() != 1) {
+                return null;
+            }
+            return polyList.get(0);
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.warn("Failed to fetch poly {} for request {}", id, httpServletRequest);
+            return null;
+        }
+    }
+
     /**
      * Fetch tenant root file
      * @param httpServletRequest
@@ -46,32 +88,10 @@ public class WebPolyCore {
         return fetchTenantRoot(httpServletRequest).exists();
     }
 
-
-    /**
-     * Fetch poly by ID
-     * @param id
-     * @param httpServletRequest
-     * @return poly instance or null if poly is not available
-     */
-    public Poly fetchPoly(String id, HttpServletRequest httpServletRequest) {
+    private SQLiteStorage fetchSqliteDB(HttpServletRequest httpServletRequest) {
         File tenantRoot = fetchTenantRoot(httpServletRequest);
         File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
-        SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
-
-        PreparedStatement preparedStatement;
-        try(Connection connection = sqLiteStorage.openDb()) {
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?");
-            preparedStatement.setObject(1, id);
-            List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
-            if (polyList.size() != 1) {
-                return null;
-            }
-            return polyList.get(0);
-        } catch (Exception e) {
-            e.printStackTrace();
-            LOG.warn("Failed to fetch poly {} from request {}", id, httpServletRequest);
-            return null;
-        }
+        return new SQLiteStorage(dbFile.getAbsolutePath());
     }
 
 }
