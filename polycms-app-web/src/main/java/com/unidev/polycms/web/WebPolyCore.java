@@ -1,5 +1,6 @@
 package com.unidev.polycms.web;
 
+import com.unidev.platform.common.utils.StringUtils;
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.domain.BasicPoly;
@@ -15,7 +16,9 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Core service for web app
@@ -31,6 +34,52 @@ public class WebPolyCore {
     @Autowired
     private WebUtils webUtils;
 
+    public static Integer ITEM_PER_PAGE = 20;
+
+    /**
+     * List polys filtered by page, category, tag and ordered by date
+     * @param page
+     * @param category
+     * @param tag
+     * @param httpServletRequest
+     * @return
+     */
+    public List<BasicPoly> listNewPoly(Integer page, String category, String tag, HttpServletRequest httpServletRequest) {
+        SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
+        PreparedStatement preparedStatement;
+        try(Connection connection = sqLiteStorage.openDb()) {
+            Integer id = 1;
+            Map<Integer, Object> params = new HashMap<>();
+
+            StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
+
+            if (!StringUtils.isBlank(category)) {
+                query.append(  " AND " + PolyConstants.CATEGORY_KEY + " = ?");
+                params.put(id++, category );
+            }
+
+            if (!StringUtils.isBlank(tag)) {
+                query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
+                params.put(id++, tag );
+            }
+
+            query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
+            params.put(id++, ITEM_PER_PAGE);
+            params.put(id++, ITEM_PER_PAGE * page);
+
+            preparedStatement = connection.prepareStatement(query.toString());
+            for(Map.Entry<Integer, Object> entry : params.entrySet()) {
+                preparedStatement.setObject(entry.getKey(), entry.getValue());
+            }
+
+            List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
+            return polyList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.warn("Failed to fetch categories for request {}", httpServletRequest);
+            return null;
+        }
+    }
 
     /**
      * Fetch categories records
