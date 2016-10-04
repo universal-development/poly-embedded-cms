@@ -5,6 +5,9 @@ package com.unidev.polyembeddedcms;
  */
 public class PolyConstants {
 
+    public static final String INDEX_FILE = "index.json";
+    public static final String DB_FILE = "polydata.db";
+
     public static final String ID_KEY = "_id";
     public static final String DATE_KEY = "date";
     public static final String CATEGORY_KEY = "category";

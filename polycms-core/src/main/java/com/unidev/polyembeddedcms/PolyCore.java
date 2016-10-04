@@ -19,8 +19,6 @@ public class PolyCore {
 
     private static Logger LOG = LoggerFactory.getLogger(PolyCore.class);
 
-    public static final String INDEX_FILE = "index.json";
-
     private File storageRoot;
 
     // specific tenant operations
@@ -31,7 +29,8 @@ public class PolyCore {
      * @return
      */
     public File fetchStorageRoot(String tenantName) {
-        return new File(storageRoot, tenantName);
+        File storageRootFile = new File(storageRoot, tenantName);
+        return storageRootFile;
     }
 
     // Tenant index operations
@@ -60,7 +59,7 @@ public class PolyCore {
         tenantRoot.mkdirs();
         FlatFileStorage flatFileStorage = new FlatFileStorage();
         flatFileStorage.metadata().put("tenant", tenantName);
-        FlatFileStorageMapper.storageMapper().saveSource(new File(tenantRoot, INDEX_FILE)).save(flatFileStorage);
+        FlatFileStorageMapper.storageMapper().saveSource(new File(tenantRoot, PolyConstants.INDEX_FILE)).save(flatFileStorage);
     }
 
     /**
