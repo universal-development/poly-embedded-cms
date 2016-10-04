@@ -1,6 +1,20 @@
 # Content management for polydata records
 
-Service for management of polydata records stored in SQLite databases
+Service for management of polydata records stored in different poly stores: flat file, sqlite
+ 
+Modules
+=======
+
+Current version: 0.0.1-S
+
+```
+polycms-app-hateoas - hateoas based API 
+polycms-app-web - web pages renderer 
+```
+
+```
+polycms-migrators  - common used db migrators for template storages
+```
 
 License
 =======
