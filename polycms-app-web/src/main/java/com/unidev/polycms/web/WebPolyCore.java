@@ -7,7 +7,7 @@ import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCore;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +28,16 @@ public class WebPolyCore {
 
     private static Logger LOG = LoggerFactory.getLogger(WebPolyCore.class);
 
-    @Autowired
     private PolyCore polyCore;
 
-    @Autowired
     private WebUtils webUtils;
 
     public static Integer ITEM_PER_PAGE = 20;
+
+    public WebPolyCore( @Autowired PolyCore polyCore, @Autowired WebUtils webUtils) {
+        this.polyCore = polyCore;
+        this.webUtils = webUtils;
+    }
 
     /**
      * List polys filtered by page, category, tag and ordered by date
@@ -112,7 +115,7 @@ public class WebPolyCore {
 
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.TAGS_POLY);
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.TAGS_POLY + " ORDER BY count DESC");
             List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
             return polyList;
         } catch (Exception e) {
