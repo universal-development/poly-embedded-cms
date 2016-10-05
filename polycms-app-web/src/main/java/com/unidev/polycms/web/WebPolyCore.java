@@ -8,6 +8,8 @@ import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCore;
 import javax.servlet.http.HttpServletRequest;
+
+import com.unidev.polyembeddedcms.PolyRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +134,7 @@ public class WebPolyCore {
      * @param httpServletRequest
      * @return poly instance or null if poly is not available
      */
-    public Poly fetchPoly(String id, HttpServletRequest httpServletRequest) {
+    public PolyRecord fetchPoly(String id, HttpServletRequest httpServletRequest) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
 
         PreparedStatement preparedStatement;
@@ -143,7 +145,7 @@ public class WebPolyCore {
             if (polyList.size() != 1) {
                 return null;
             }
-            return polyList.get(0);
+            return new PolyRecord(polyList.get(0));
         } catch (Exception e) {
             e.printStackTrace();
             LOG.warn("Failed to fetch poly {} for request {}", id, httpServletRequest);
