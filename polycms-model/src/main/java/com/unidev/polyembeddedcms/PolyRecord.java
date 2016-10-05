@@ -50,4 +50,24 @@ public class PolyRecord extends BasicPoly {
         return this;
     }
 
+    public <T> T category() {
+        return fetch(CATEGORY_KEY);
+    }
+
+    public <T> PolyRecord category(T date) {
+        put(CATEGORY_KEY, date);
+        return this;
+    }
+
+    public <T> T tags() {
+        return fetch(TAGS_KEY);
+    }
+
+    public <T> PolyRecord tags(T date) {
+        put(TAGS_KEY, date);
+        return this;
+    }
+
+
+
 }
