@@ -9,6 +9,12 @@ import static com.unidev.polyembeddedcms.PolyConstants.*;
  */
 public class PolyRecord extends BasicPoly {
 
+    public PolyRecord() {}
+
+    public PolyRecord(BasicPoly basicPoly) {
+        putAll(basicPoly);
+    }
+
     public PolyRecord _id(String _id) {
         super._id(_id);
         return this;
@@ -54,8 +60,8 @@ public class PolyRecord extends BasicPoly {
         return fetch(CATEGORY_KEY);
     }
 
-    public <T> PolyRecord category(T date) {
-        put(CATEGORY_KEY, date);
+    public <T> PolyRecord category(T category) {
+        put(CATEGORY_KEY, category);
         return this;
     }
 
@@ -63,8 +69,8 @@ public class PolyRecord extends BasicPoly {
         return fetch(TAGS_KEY);
     }
 
-    public <T> PolyRecord tags(T date) {
-        put(TAGS_KEY, date);
+    public <T> PolyRecord tags(T tags) {
+        put(TAGS_KEY, tags);
         return this;
     }
 
