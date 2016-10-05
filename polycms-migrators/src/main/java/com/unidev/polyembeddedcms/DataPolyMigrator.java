@@ -17,7 +17,7 @@ public class DataPolyMigrator implements SQLitePolyMigrator {
     private static Logger LOG = LoggerFactory.getLogger(DataPolyMigrator.class);
     @Override
     public boolean canHandle(String poly) {
-        return PolyConstants.CATEGORY_POLY.equalsIgnoreCase(poly);
+        return PolyConstants.DATA_POLY.equalsIgnoreCase(poly);
     }
 
     @Override
