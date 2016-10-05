@@ -4,10 +4,8 @@ import com.unidev.polycms.web.WebPolyCore;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polyembeddedcms.PolyConstants;
-import com.unidev.polyembeddedcms.PolyCore;
-import com.unidev.polyembeddedcms.PolyRecord;
-import com.unidev.polyembeddedcms.TagsPolyMigrator;
+import com.unidev.polydata.domain.Poly;
+import com.unidev.polyembeddedcms.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.Connection;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -81,7 +80,27 @@ public class ProjectnameApplicationTests {
 	}
 
 	@Test
-	public void testPolyLoading() {
+	public void testSinglePolyLoading() throws SQLiteStorageException {
+		SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
+		sqLiteStorage.setPolyMigrators(Arrays.asList(new DataPolyMigrator()));
+
+		String postId = "post_1";
+
+		PolyRecord data = new PolyRecord()._id(postId).label("Tomato").category("Test").tags("tag1, tag2").date(new Date());
+		sqLiteStorage.save(PolyConstants.DATA_POLY, data);
+
+		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
+
+		PolyRecord poly = webPolyCore.fetchPoly(postId, httpServletRequest);
+
+		assertThat(poly, is(not(nullValue())));
+		assertThat(poly._id(), is(postId));
+		assertThat(poly.date(), is(notNullValue()));
+
+		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
+		PolyRecord notExistingPoly = webPolyCore.fetchPoly("not-existing-id", httpServletRequest);
+		assertThat(notExistingPoly, is(nullValue()));
 
 	}
 
