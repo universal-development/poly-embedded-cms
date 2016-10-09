@@ -104,4 +104,18 @@ public class ProjectnameApplicationTests {
 
 	}
 
+	@Test
+	public void testPolyPagination() throws SQLiteStorageException {
+		SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
+		sqLiteStorage.setPolyMigrators(Arrays.asList(new DataPolyMigrator()));
+
+		for(int i = 0;i<10;i++) {
+			String postId = "post_" + i;
+
+			PolyRecord data = new PolyRecord()._id(postId).label("Label " + i ).category("Cat1").tags("tag1, tag2").date(new Date());
+			sqLiteStorage.save(PolyConstants.DATA_POLY, data);
+		}
+
+	}
+
 }
