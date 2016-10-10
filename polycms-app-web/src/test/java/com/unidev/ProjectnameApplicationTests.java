@@ -1,5 +1,6 @@
 package com.unidev;
 
+import com.unidev.polycms.web.ListNewPolyQuery;
 import com.unidev.polycms.web.WebPolyCore;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
@@ -112,9 +113,17 @@ public class ProjectnameApplicationTests {
 		for(int i = 0;i<10;i++) {
 			String postId = "post_" + i;
 
-			PolyRecord data = new PolyRecord()._id(postId).label("Label " + i ).category("Cat1").tags("tag1, tag2").date(new Date());
+			PolyRecord data = new PolyRecord()._id(postId).label("Label " + i ).category("Cat1").tags("tag1, tag2").date(new Date( System.currentTimeMillis() + 100 * i));
 			sqLiteStorage.save(PolyConstants.DATA_POLY, data);
 		}
+
+		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
+		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
+
+		ListNewPolyQuery listNewPolyQuery = ListNewPolyQuery.query().withPage(0L);
+
+		List<BasicPoly> basicPolyList = webPolyCore.listNewPoly(listNewPolyQuery, httpServletRequest);
+		assertThat(basicPolyList, is(notNullValue()));
 
 	}
 
