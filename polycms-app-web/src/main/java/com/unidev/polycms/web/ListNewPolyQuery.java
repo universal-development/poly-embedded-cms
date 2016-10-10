@@ -9,6 +9,9 @@ public class ListNewPolyQuery {
     private String category;
     private Long page;
 
+    private Integer itemPerPage = 20;
+
+
     public ListNewPolyQuery() {}
 
     public ListNewPolyQuery(String tag, String category, Long page) {
@@ -37,6 +40,11 @@ public class ListNewPolyQuery {
         return this;
     }
 
+    public ListNewPolyQuery itemPerPage(Integer itemPerPage) {
+        this.itemPerPage = itemPerPage;
+        return this;
+    }
+
     public String getTag() {
         return tag;
     }
@@ -61,4 +69,11 @@ public class ListNewPolyQuery {
         this.page = page;
     }
 
+    public Integer getItemPerPage() {
+        return itemPerPage;
+    }
+
+    public void setItemPerPage(Integer itemPerPage) {
+        this.itemPerPage = itemPerPage;
+    }
 }

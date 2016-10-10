@@ -34,7 +34,6 @@ public class WebPolyCore {
 
     private WebUtils webUtils;
 
-    public static Integer ITEM_PER_PAGE = 20;
 
     public WebPolyCore( @Autowired PolyCore polyCore, @Autowired WebUtils webUtils) {
         this.polyCore = polyCore;
@@ -43,13 +42,10 @@ public class WebPolyCore {
 
     /**
      * List polys filtered by page, category, tag and ordered by date
-     * @param page
-     * @param category
-     * @param tag
      * @param httpServletRequest
      * @return
      */
-    public List<BasicPoly> listNewPoly(Integer page, String category, String tag, HttpServletRequest httpServletRequest) {
+    public List<BasicPoly> listNewPoly(ListNewPolyQuery listNewPolyQuery, HttpServletRequest httpServletRequest) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
@@ -58,19 +54,19 @@ public class WebPolyCore {
 
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
 
-            if (!StringUtils.isBlank(category)) {
+            if (!StringUtils.isBlank(listNewPolyQuery.getCategory())) {
                 query.append(  " AND " + PolyConstants.CATEGORY_KEY + " = ?");
-                params.put(id++, category );
+                params.put(id++, listNewPolyQuery.getCategory() );
             }
 
-            if (!StringUtils.isBlank(tag)) {
+            if (!StringUtils.isBlank(listNewPolyQuery.getTag())) {
                 query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
-                params.put(id++, tag );
+                params.put(id++, listNewPolyQuery.getTag() );
             }
 
             query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
-            params.put(id++, ITEM_PER_PAGE);
-            params.put(id++, ITEM_PER_PAGE * page);
+            params.put(id++, listNewPolyQuery.getItemPerPage());
+            params.put(id++, listNewPolyQuery.getItemPerPage() * listNewPolyQuery.getPage());
 
             preparedStatement = connection.prepareStatement(query.toString());
             for(Map.Entry<Integer, Object> entry : params.entrySet()) {
