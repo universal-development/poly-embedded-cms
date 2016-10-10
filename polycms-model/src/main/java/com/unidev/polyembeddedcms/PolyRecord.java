@@ -48,11 +48,11 @@ public class PolyRecord extends BasicPoly {
     }
 
     public <T> T date() {
-        return fetch(DATA_KEY);
+        return fetch(DATE_KEY);
     }
 
     public <T> PolyRecord date(T date) {
-        put(DATA_KEY, date);
+        put(DATE_KEY, date);
         return this;
     }
 
