@@ -1,11 +1,10 @@
 package com.unidev;
 
-import com.unidev.polycms.web.ListNewPolyQuery;
+import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polycms.web.WebPolyCore;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -120,7 +117,7 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		ListNewPolyQuery listNewPolyQuery = ListNewPolyQuery.query().page(0L).itemPerPage(5);
+		PolyQuery listNewPolyQuery = PolyQuery.query().page(0L).itemPerPage(5);
 
 		List<BasicPoly> basicPolyList = webPolyCore.listNewPoly(listNewPolyQuery, httpServletRequest);
 		assertThat(basicPolyList, is(notNullValue()));
