@@ -120,10 +120,11 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		ListNewPolyQuery listNewPolyQuery = ListNewPolyQuery.query().withPage(0L);
+		ListNewPolyQuery listNewPolyQuery = ListNewPolyQuery.query().page(0L).itemPerPage(5);
 
 		List<BasicPoly> basicPolyList = webPolyCore.listNewPoly(listNewPolyQuery, httpServletRequest);
 		assertThat(basicPolyList, is(notNullValue()));
+		assertThat(basicPolyList.size(), is(5));
 
 	}
 

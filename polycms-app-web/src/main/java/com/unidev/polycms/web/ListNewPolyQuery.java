@@ -24,18 +24,18 @@ public class ListNewPolyQuery {
         return new ListNewPolyQuery();
     }
 
-    public ListNewPolyQuery withTag(String tag) {
+    public ListNewPolyQuery tag(String tag) {
         setTag(tag);
         return this;
     }
 
-    public ListNewPolyQuery withCategory(String category) {
+    public ListNewPolyQuery category(String category) {
         setCategory(category);
         return this;
     }
 
 
-    public ListNewPolyQuery withPage(Long page) {
+    public ListNewPolyQuery page(Long page) {
         setPage(page);
         return this;
     }
