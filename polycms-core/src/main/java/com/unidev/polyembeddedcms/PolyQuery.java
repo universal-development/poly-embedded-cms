@@ -1,9 +1,9 @@
-package com.unidev.polycms.web;
+package com.unidev.polyembeddedcms;
 
 /**
  * Query object for new new polys
  */
-public class ListNewPolyQuery {
+public class PolyQuery {
 
     private String tag;
     private String category;
@@ -12,35 +12,35 @@ public class ListNewPolyQuery {
     private Integer itemPerPage = 20;
 
 
-    public ListNewPolyQuery() {}
+    public PolyQuery() {}
 
-    public ListNewPolyQuery(String tag, String category, Long page) {
+    public PolyQuery(String tag, String category, Long page) {
         this.tag = tag;
         this.category = category;
         this.page = page;
     }
 
-    public static ListNewPolyQuery query() {
-        return new ListNewPolyQuery();
+    public static PolyQuery query() {
+        return new PolyQuery();
     }
 
-    public ListNewPolyQuery tag(String tag) {
+    public PolyQuery tag(String tag) {
         setTag(tag);
         return this;
     }
 
-    public ListNewPolyQuery category(String category) {
+    public PolyQuery category(String category) {
         setCategory(category);
         return this;
     }
 
 
-    public ListNewPolyQuery page(Long page) {
+    public PolyQuery page(Long page) {
         setPage(page);
         return this;
     }
 
-    public ListNewPolyQuery itemPerPage(Integer itemPerPage) {
+    public PolyQuery itemPerPage(Integer itemPerPage) {
         this.itemPerPage = itemPerPage;
         return this;
     }
