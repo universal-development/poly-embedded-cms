@@ -4,11 +4,11 @@ import com.unidev.platform.common.utils.StringUtils;
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCore;
 import javax.servlet.http.HttpServletRequest;
 
+import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,7 +45,7 @@ public class WebPolyCore {
      * @param httpServletRequest
      * @return
      */
-    public List<BasicPoly> listNewPoly(ListNewPolyQuery listNewPolyQuery, HttpServletRequest httpServletRequest) {
+    public List<BasicPoly> listNewPoly(PolyQuery listNewPolyQuery, HttpServletRequest httpServletRequest) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(httpServletRequest);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
