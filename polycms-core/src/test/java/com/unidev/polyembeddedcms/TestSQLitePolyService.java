@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import static com.unidev.polyembeddedcms.PolyQuery.query;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.Matchers.is;
@@ -96,11 +97,22 @@ public class TestSQLitePolyService {
             sqLiteStorage.save(PolyConstants.DATA_POLY, data);
         }
 
-        PolyQuery listNewPolyQuery = PolyQuery.query().page(0L).itemPerPage(5);
+        PolyQuery listNewPolyQuery = query().page(0L).itemPerPage(5);
 
         List<BasicPoly> basicPolyList = sqlitePolyService.listNewPoly(listNewPolyQuery, tenant);
         assertThat(basicPolyList, is(notNullValue()));
         assertThat(basicPolyList.size(), is(5));
+
+        PolyQuery tomatoQuery = query().category("Tomato");
+        List<BasicPoly> tomatoList = sqlitePolyService.listNewPoly(tomatoQuery, tenant);
+        assertThat(tomatoList, is(notNullValue()));
+        assertThat(tomatoList.size(), is(0));
+
+        PolyQuery tagsQuery = query().tag("tag1").itemPerPage(2);
+        List<BasicPoly> tagsList = sqlitePolyService.listNewPoly(tagsQuery, tenant);
+        assertThat(tagsList, is(notNullValue()));
+        assertThat(tagsList.size(), is(2));
+
 
     }
 
