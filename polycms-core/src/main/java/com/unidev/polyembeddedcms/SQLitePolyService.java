@@ -49,7 +49,7 @@ public class SQLitePolyService {
 
             if (!StringUtils.isBlank(listNewPolyQuery.getTag())) {
                 query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
-                params.put(id++, listNewPolyQuery.getTag() );
+                params.put(id++, "%" + listNewPolyQuery.getTag() + "%" );
             }
 
             query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
