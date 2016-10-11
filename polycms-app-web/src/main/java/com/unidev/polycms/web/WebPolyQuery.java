@@ -1,25 +1,26 @@
 package com.unidev.polycms.web;
 
+import com.unidev.polyembeddedcms.PolyQuery;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.ui.Model;
 
 /**
  * Wrapper class for polydata web requests
  */
-public class PolyRequest {
+public class WebPolyQuery extends PolyQuery {
 
     private HttpServletRequest request;
     private Model model;
 
-    public static PolyRequest polyRequest() {
-        return new PolyRequest();
+    public static WebPolyQuery polyRequest() {
+        return new WebPolyQuery();
     }
 
     public Model model() {
         return model;
     }
 
-    public PolyRequest model(Model model) {
+    public WebPolyQuery model(Model model) {
         this.model = model;
         return this;
     }
@@ -28,7 +29,7 @@ public class PolyRequest {
         return request;
     }
 
-    public PolyRequest request(HttpServletRequest request) {
+    public WebPolyQuery request(HttpServletRequest request) {
         this.request = request;
         return this;
     }
