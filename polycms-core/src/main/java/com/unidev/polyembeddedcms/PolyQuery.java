@@ -11,7 +11,6 @@ public class PolyQuery {
 
     private Integer itemPerPage = 20;
 
-
     public PolyQuery() {}
 
     public PolyQuery(String tag, String category, Long page) {
@@ -24,25 +23,28 @@ public class PolyQuery {
         return new PolyQuery();
     }
 
-    public PolyQuery tag(String tag) {
+    public <T extends PolyQuery> T tag(String tag) {
         setTag(tag);
-        return this;
+        return (T) this;
     }
 
-    public PolyQuery category(String category) {
+    public <T extends PolyQuery> T category(String category) {
         setCategory(category);
-        return this;
+        return (T) this;
     }
 
+    public Long page() {
+        return page;
+    }
 
-    public PolyQuery page(Long page) {
+    public <T extends PolyQuery> T page(Long page) {
         setPage(page);
-        return this;
+        return (T) this;
     }
 
-    public PolyQuery itemPerPage(Integer itemPerPage) {
+    public <T extends PolyQuery> T itemPerPage(Integer itemPerPage) {
         this.itemPerPage = itemPerPage;
-        return this;
+        return (T) this;
     }
 
     public String getTag() {
