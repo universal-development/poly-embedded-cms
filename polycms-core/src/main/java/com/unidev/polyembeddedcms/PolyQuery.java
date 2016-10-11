@@ -7,7 +7,7 @@ public class PolyQuery {
 
     private String tag;
     private String category;
-    private Long page;
+    private Long page = 0L;
 
     private Integer itemPerPage = 20;
 
