@@ -1,5 +1,6 @@
 package com.unidev;
 
+import com.unidev.polycms.web.WebPolyQuery;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polycms.web.WebPolyCore;
 import com.unidev.polydata.SQLiteStorage;
@@ -13,6 +14,8 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.ui.ModelMap;
+import org.springframework.validation.support.BindingAwareModelMap;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -20,6 +23,7 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -67,7 +71,16 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		List<BasicPoly> list = webPolyCore.fetchTags(httpServletRequest);
+		WebPolyQuery webPolyQuery = new WebPolyQuery();
+		webPolyQuery.model(new BindingAwareModelMap());
+		webPolyQuery.request(httpServletRequest);
+
+
+		webPolyCore.addTags(webPolyQuery);
+
+		Map<String, Object> objectMap = webPolyQuery.model().asMap();
+		List<BasicPoly> list = (List<BasicPoly>) objectMap.get(WebPolyCore.TAGS_KEY);
+
 		assertThat(list, is(not(nullValue())));
 		assertThat(list.size(), is(2));
 
@@ -90,14 +103,33 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		PolyRecord poly = webPolyCore.fetchPoly(postId, httpServletRequest);
+
+		WebPolyQuery webPolyQuery = new WebPolyQuery();
+		webPolyQuery.model(new BindingAwareModelMap());
+		webPolyQuery.request(httpServletRequest);
+		webPolyQuery.polyId(postId);
+
+		webPolyCore.addPoly(webPolyQuery);
+		Map<String, Object> objectMap = webPolyQuery.model().asMap();
+
+
+		PolyRecord poly = (PolyRecord) objectMap.get(WebPolyCore.POLY_KEY);
 
 		assertThat(poly, is(not(nullValue())));
 		assertThat(poly._id(), is(postId));
 		assertThat(poly.date(), is(notNullValue()));
 
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
-		PolyRecord notExistingPoly = webPolyCore.fetchPoly("not-existing-id", httpServletRequest);
+
+
+		WebPolyQuery webPolyQueryNonExist = new WebPolyQuery();
+		webPolyQueryNonExist.model(new BindingAwareModelMap());
+		webPolyQueryNonExist.request(httpServletRequest);
+		webPolyQueryNonExist.polyId("not-existing-id");
+
+		webPolyCore.addPoly(webPolyQueryNonExist);
+		objectMap = webPolyQueryNonExist.model().asMap();
+		PolyRecord notExistingPoly = (PolyRecord) objectMap.get(WebPolyCore.POLY_KEY);
 		assertThat(notExistingPoly, is(nullValue()));
 
 	}
@@ -117,9 +149,15 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		PolyQuery listNewPolyQuery = PolyQuery.query().page(0L).itemPerPage(5);
+		WebPolyQuery webPolyQuery = new WebPolyQuery().page(0L).itemPerPage(5);
+		webPolyQuery.model(new BindingAwareModelMap());
+		webPolyQuery.request(httpServletRequest);
 
-		List<BasicPoly> basicPolyList = webPolyCore.listNewPoly(listNewPolyQuery, httpServletRequest);
+		webPolyCore.addNew(webPolyQuery, "");
+
+		Map<String, Object> objectMap = webPolyQuery.model().asMap();
+
+		List<BasicPoly> basicPolyList = (List<BasicPoly>) objectMap.get(WebPolyCore.ITEMS_KEY);
 		assertThat(basicPolyList, is(notNullValue()));
 		assertThat(basicPolyList.size(), is(5));
 
