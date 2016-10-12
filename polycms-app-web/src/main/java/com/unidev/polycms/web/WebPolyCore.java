@@ -33,13 +33,16 @@ public class WebPolyCore {
 
 
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
-        List<BasicPoly> categories = fetchCategories(polyRequest.request());
+        String tenant = fetchTenant(polyRequest.request());
+        List<BasicPoly> categories = sqLitePolyService.fetchCategories(tenant);
         polyRequest.model().addAttribute("categories", categories);
         return this;
     }
 
     public WebPolyCore addTags(WebPolyQuery polyRequest) {
-        List<BasicPoly> tags = fetchCategories(polyRequest.request());
+        String tenant = fetchTenant(polyRequest.request());
+        List<BasicPoly> tags = sqLitePolyService.fetchTags(tenant);
+
         polyRequest.model().addAttribute("tags", tags);
         return this;
     }
@@ -54,8 +57,17 @@ public class WebPolyCore {
     }
 
     public WebPolyCore addNew(WebPolyQuery polyRequest, String urlBegin) {
-        List<BasicPoly> polyList = listNewPoly(polyRequest, polyRequest.request());
+        String tenant = fetchTenant(polyRequest.request());
+        List<BasicPoly> polyList = sqLitePolyService.listNewPoly(polyRequest, tenant);
         return addPagination(polyRequest, urlBegin, polyList);
+    }
+
+    public WebPolyCore addPoly(WebPolyQuery polyQuery) {
+        String tenant = fetchTenant(polyQuery.request());
+        PolyRecord polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
+        polyQuery.model().addAttribute("poly", polyRecord);
+
+        return this;
     }
 
     public WebPolyCore addPagination(WebPolyQuery polyRequest, String urlBegin, List<BasicPoly> items) {
@@ -95,47 +107,6 @@ public class WebPolyCore {
         this.sqLitePolyService = sqLitePolyService;
         this.webUtils = webUtils;
         this.polyCore = polyCore;
-    }
-
-    /**
-     * List polys filtered by page, category, tag and ordered by date
-     * @param httpServletRequest
-     * @return
-     */
-    private List<BasicPoly> listNewPoly(PolyQuery listNewPolyQuery, HttpServletRequest httpServletRequest) {
-        String tenant = fetchTenant(httpServletRequest);
-        return sqLitePolyService.listNewPoly(listNewPolyQuery, tenant);
-    }
-
-    /**
-     * Fetch categories records
-     * @param httpServletRequest
-     * @return
-     */
-    private List<BasicPoly> fetchCategories(HttpServletRequest httpServletRequest) {
-        String tenant = fetchTenant(httpServletRequest);
-        return sqLitePolyService.fetchCategories(tenant);
-    }
-
-    /**
-     * Fetch tags from poly store
-     * @param httpServletRequest
-     * @return
-     */
-    private List<BasicPoly> fetchTags(HttpServletRequest httpServletRequest) {
-        String tenant = fetchTenant(httpServletRequest);
-        return sqLitePolyService.fetchTags(tenant);
-    }
-
-    /**
-     * Fetch poly by ID
-     * @param id
-     * @param httpServletRequest
-     * @return poly instance or null if poly is not available
-     */
-    private PolyRecord fetchPoly(String id, HttpServletRequest httpServletRequest) {
-        String tenant = fetchTenant(httpServletRequest);
-        return sqLitePolyService.fetchPoly(id, tenant);
     }
 
     /**
