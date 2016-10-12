@@ -1,8 +1,9 @@
 package com.unidev.polycms.web;
 
 import com.unidev.polyembeddedcms.PolyQuery;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.ui.Model;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Wrapper class for polydata web requests
