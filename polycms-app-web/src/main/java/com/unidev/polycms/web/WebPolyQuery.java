@@ -9,11 +9,22 @@ import org.springframework.ui.Model;
  */
 public class WebPolyQuery extends PolyQuery {
 
+    private String polyId;
     private HttpServletRequest request;
     private Model model;
 
     public static WebPolyQuery polyRequest() {
         return new WebPolyQuery();
+    }
+
+
+    public String polyId() {
+        return polyId;
+    }
+
+    public WebPolyQuery polyId(String polyId) {
+        this.polyId = polyId;
+        return this;
     }
 
     public Model model() {
@@ -48,5 +59,13 @@ public class WebPolyQuery extends PolyQuery {
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public String getPolyId() {
+        return polyId;
+    }
+
+    public void setPolyId(String polyId) {
+        this.polyId = polyId;
     }
 }
