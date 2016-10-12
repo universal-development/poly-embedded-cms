@@ -23,6 +23,11 @@ import java.util.Map;
 @Service
 public class WebPolyCore {
     public static final int ITEM_PER_PAGE = 40;
+    public static final String CATGEGORIES_KEY = "categories";
+    public static final String TAGS_KEY = "tags";
+    public static final String POLY_KEY = "poly";
+    public static final String ITEMS_KEY = "poly";
+
     private static Logger LOG = LoggerFactory.getLogger(WebPolyCore.class);
 
     private SQLitePolyService sqLitePolyService;
@@ -32,10 +37,11 @@ public class WebPolyCore {
     private PolyCore polyCore;
 
 
+
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
         String tenant = fetchTenant(polyRequest.request());
         List<BasicPoly> categories = sqLitePolyService.fetchCategories(tenant);
-        polyRequest.model().addAttribute("categories", categories);
+        polyRequest.model().addAttribute(CATGEGORIES_KEY, categories);
         return this;
     }
 
@@ -43,7 +49,7 @@ public class WebPolyCore {
         String tenant = fetchTenant(polyRequest.request());
         List<BasicPoly> tags = sqLitePolyService.fetchTags(tenant);
 
-        polyRequest.model().addAttribute("tags", tags);
+        polyRequest.model().addAttribute(TAGS_KEY, tags);
         return this;
     }
 
@@ -65,14 +71,14 @@ public class WebPolyCore {
     public WebPolyCore addPoly(WebPolyQuery polyQuery) {
         String tenant = fetchTenant(polyQuery.request());
         PolyRecord polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
-        polyQuery.model().addAttribute("poly", polyRecord);
+        polyQuery.model().addAttribute(POLY_KEY, polyRecord);
 
         return this;
     }
 
     public WebPolyCore addPagination(WebPolyQuery polyRequest, String urlBegin, List<BasicPoly> items) {
         polyRequest.model().addAttribute("page", polyRequest.page());
-        polyRequest.model().addAttribute("items", items);
+        polyRequest.model().addAttribute(ITEMS_KEY, items);
 
         Long backPage = polyRequest.page() - 1;
         Long nextPage = polyRequest.page() + 1;
