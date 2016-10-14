@@ -25,7 +25,7 @@ import java.util.Map;
 @Service
 public class WebPolyCore {
     public static final int ITEM_PER_PAGE = 40;
-    public static final String CATGEGORIES_KEY = "categories";
+    public static final String CATEGORIES_KEY = "categories";
     public static final String TAGS_KEY = "tags";
     public static final String POLY_KEY = "poly";
     public static final String ITEMS_KEY = "poly";
@@ -43,7 +43,7 @@ public class WebPolyCore {
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
         String tenant = fetchTenant(polyRequest.request());
         List<BasicPoly> categories = sqLitePolyService.fetchCategories(tenant);
-        polyRequest.model().addAttribute(CATGEGORIES_KEY, categories);
+        polyRequest.model().addAttribute(CATEGORIES_KEY, categories);
         return this;
     }
 
@@ -61,6 +61,7 @@ public class WebPolyCore {
      * @return
      */
     public WebPolyCore addSupportModel(WebPolyQuery polyRequest) {
+        polyRequest.model().addAttribute("polyRequest", polyRequest); // link to own request, recursion(?)
         return addCategories(polyRequest).addTags(polyRequest);
     }
 
