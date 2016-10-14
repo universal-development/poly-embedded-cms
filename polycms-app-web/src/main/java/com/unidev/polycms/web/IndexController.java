@@ -79,6 +79,9 @@ public class IndexController {
 
     @RequestMapping(value = "/category/{category}/page/{page}")
     public String category(@PathVariable("category") String category, @PathVariable("page") Long page, Model model) throws UnsupportedEncodingException {
+        if (page == null || page <= 0L) {
+            page = 1L;
+        }
         WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
                 .model(model)
                 .request(httpServletRequest)
@@ -116,6 +119,9 @@ public class IndexController {
 
     @RequestMapping(value = "/tag/{tag}/page/{page}")
     public String tag(@PathVariable("tag") String tag, @PathVariable("page") Long page, Model model) throws UnsupportedEncodingException {
+        if (page == null || page <= 0L) {
+            page = 1L;
+        }
         WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
                 .model(model)
                 .request(httpServletRequest)

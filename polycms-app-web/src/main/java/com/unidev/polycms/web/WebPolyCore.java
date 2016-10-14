@@ -28,7 +28,7 @@ public class WebPolyCore {
     public static final String CATEGORIES_KEY = "categories";
     public static final String TAGS_KEY = "tags";
     public static final String POLY_KEY = "poly";
-    public static final String ITEMS_KEY = "poly";
+    public static final String ITEMS_KEY = "items";
 
     private static Logger LOG = LoggerFactory.getLogger(WebPolyCore.class);
 
