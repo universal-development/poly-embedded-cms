@@ -97,6 +97,33 @@ public class IndexController {
                 .request(httpServletRequest)
                 ;
         webPolyCore.addSupportModel(polyQuery);
+        model.addAttribute("view", "tags");
         return "tags";
+    }
+
+    @RequestMapping(value = "/tag/{tag}")
+    public String tag(@PathVariable("tag") String tag, Model model) throws UnsupportedEncodingException {
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(httpServletRequest)
+                .tag(tag)
+                .page(0L);
+
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag);
+        model.addAttribute("view", "tags_index");
+        return "list";
+    }
+
+    @RequestMapping(value = "/tag/{tag}/page/{page}")
+    public String tag(@PathVariable("tag") String tag, @PathVariable("page") Long page, Model model) throws UnsupportedEncodingException {
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(httpServletRequest)
+                .tag(tag)
+                .page(page);
+
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag);
+        model.addAttribute("view", "tags_index");
+        return "list";
     }
 }
