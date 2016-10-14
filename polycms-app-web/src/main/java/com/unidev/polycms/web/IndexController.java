@@ -72,7 +72,7 @@ public class IndexController {
                 .category(category)
                 .page(0L);
 
-        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category);
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category +"/page/");
         model.addAttribute("view", "category_index");
         return "list";
     }
@@ -88,7 +88,7 @@ public class IndexController {
                 .category(category)
                 .page(page);
 
-        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category);
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category +"/page/" );
         model.addAttribute("view", "category_index");
         return "list";
     }
@@ -112,7 +112,7 @@ public class IndexController {
                 .tag(tag)
                 .page(0L);
 
-        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag);
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag +"/page/" );
         model.addAttribute("view", "tags_index");
         return "list";
     }
@@ -128,7 +128,7 @@ public class IndexController {
                 .tag(tag)
                 .page(page);
 
-        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag);
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag +"/page/");
         model.addAttribute("view", "tags_index");
         return "list";
     }

@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
-//@Ignore
+@Ignore
 public class RecordGeneration {
 
     private PolyCore polyCore;

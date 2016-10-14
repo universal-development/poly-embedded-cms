@@ -17,10 +17,20 @@ Categories:
 <a href="/tags">Tags</a>
 <hr/>
 
+
 Items: <br/>
 <div th:each="item: ${items}">
-    <p th:text="${item.title}">Title</p>   <a href="/" th:href="@{'/view/'  + ${item._id}}">View</a>
+    <p th:text="${item.label}">Title</p>   <a href="/" th:href="@{'/poly/'  + ${item._id}}">View</a>
     <p th:text="${item.date}">Date</p>
+</div>
+
+<div th:if="${view== 'tags'}"> <!-- if customer is anonymous-->
+    <h2>Tags</h2>
+
+    <div th:each="tag: ${tags}">
+        <p th:text="${tag}">tag</p>
+        <a href="/" th:href="@{'/tag/'  + ${tag._id}}">Tags with posts</a>
+    </div>
 </div>
 
 <hr/>

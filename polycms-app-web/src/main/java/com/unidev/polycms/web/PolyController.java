@@ -27,7 +27,7 @@ public class PolyController {
                 .request(httpServletRequest)
                 .polyId(polyId)
                 ;
-        webPolyCore.addPoly(polyQuery);
+        webPolyCore.addSupportModel(polyQuery).addPoly(polyQuery);
         model.addAttribute("view", "poly");
         return "poly";
     }
