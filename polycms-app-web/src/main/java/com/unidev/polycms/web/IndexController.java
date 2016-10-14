@@ -11,6 +11,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 
 /**
  * Controller for index records
@@ -89,4 +90,13 @@ public class IndexController {
         return "list";
     }
 
+    @RequestMapping(value = "/tags")
+    public String tags(Model model) {
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(httpServletRequest)
+                ;
+        webPolyCore.addSupportModel(polyQuery);
+        return "tags";
+    }
 }
