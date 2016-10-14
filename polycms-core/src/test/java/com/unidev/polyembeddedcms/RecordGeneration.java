@@ -11,8 +11,9 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 
-@Ignore
+//@Ignore
 public class RecordGeneration {
 
     private PolyCore polyCore;
@@ -54,11 +55,17 @@ public class RecordGeneration {
         PolyRecord potato = new PolyRecord()._id("potato").label("Potato").count(100);
         sqLiteStorage.save(PolyConstants.TAGS_POLY, potato);
 
-        for(int i = 1;i<10;i++) {
+        for(int i = 1;i<10000;i++) {
 
             String postId = "post_" + i;
 
+            HashMap<String, String> body = new HashMap<>();
+            body.put("data", new Date() + "");
+            body.put("record", i + "");
+
             PolyRecord data = new PolyRecord()._id(postId).label("Updates record").category("updates").tags("potato, tomato").date(new Date());
+            data.data(body);
+
             //data.data();
             sqLiteStorage.save(PolyConstants.DATA_POLY, data);
         }

@@ -1,6 +1,7 @@
 package com.unidev.polycms.web;
 
 import com.unidev.platform.j2ee.common.WebUtils;
+import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -89,14 +91,17 @@ public class WebPolyCore {
             polyRequest.model().addAttribute("backPage", urlBegin + backPage);
         }
 
+        boolean listIsEmpty = false;
         if (items != null && items.size() > 0) {
             polyRequest.model().addAttribute("nextPage", urlBegin + nextPage);
         } else {
+            listIsEmpty = true;
             polyRequest.model().addAttribute("nextPage", null);
         }
 
         List<Map<String, String>> pages = new ArrayList<>();
         for(Long pageId = polyRequest.page() - WebPolyCore.ITEM_PER_PAGE / 2;pageId<= polyRequest.page() + WebPolyCore.ITEM_PER_PAGE / 2;pageId++) {
+            //TODO: somehow limit empty "next" pages
             if (pageId >= 1) {
                 Map<String, String> pageData = new HashMap<>();
                 pageData.put("page",urlBegin + pageId);
@@ -108,6 +113,13 @@ public class WebPolyCore {
         return this;
     }
 
+
+    public FlatFileStorage fetchTenatnStorage(HttpServletRequest httpServletRequest) {
+        String tenant = fetchTenant(httpServletRequest);
+        File tenantRoot = polyCore.fetchStorageRoot(tenant);
+
+        return null;
+    }
 
     public WebPolyCore( @Autowired SQLitePolyService sqLitePolyService, @Autowired WebUtils webUtils, @Autowired PolyCore polyCore) {
         this.sqLitePolyService = sqLitePolyService;

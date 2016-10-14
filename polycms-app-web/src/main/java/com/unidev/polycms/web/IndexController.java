@@ -26,6 +26,8 @@ public class IndexController {
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/page/");
         model.addAttribute("view", "index_list");
+
+
         return "list";
     }
 
