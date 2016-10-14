@@ -101,7 +101,7 @@ public class IndexController {
                 ;
         webPolyCore.addSupportModel(polyQuery);
         model.addAttribute("view", "tags");
-        return "tags";
+        return "list";
     }
 
     @RequestMapping(value = "/tag/{tag}")
