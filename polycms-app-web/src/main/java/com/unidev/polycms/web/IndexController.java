@@ -4,9 +4,17 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.ModelAndView;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+/**
+ * Controller for index records
+ */
 @Controller
 public class IndexController {
 
@@ -16,7 +24,16 @@ public class IndexController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    @RequestMapping("/")
+    // different mappings for bording web crawlers
+    @RequestMapping(value = {"/",
+            "/index.html", "/index.htm", "/index.htmlx",
+            "/index.asp", "/index.aspx",
+            "/index.php",
+            "/index.cgi",
+            "/index.rb",
+            "/index.jsp", "/index.jsf", "/index.do", "/index.faces"
+
+    })
     public String page(Model model) {
 
         WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
@@ -25,8 +42,7 @@ public class IndexController {
                 .page(0L);
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/page/");
-        model.addAttribute("view", "index_list");
-
+        model.addAttribute("view", "index");
 
         return "list";
     }
@@ -41,7 +57,35 @@ public class IndexController {
                 .request(httpServletRequest)
                 .page(page);
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/page/");
-        model.addAttribute("view", "index_list");
+        model.addAttribute("view", "index");
+        return "list";
+    }
+
+
+    @RequestMapping(value = "/category/{category}")
+    public String categoryPage(@PathVariable("category") String category, Model model) throws UnsupportedEncodingException {
+
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(httpServletRequest)
+                .category(category)
+                .page(0L);
+
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category);
+        model.addAttribute("view", "category_index");
+        return "list";
+    }
+
+    @RequestMapping(value = "/category/{category}/page/{page}")
+    public String category(@PathVariable("category") String category, @PathVariable("page") Long page, Model model) throws UnsupportedEncodingException {
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(httpServletRequest)
+                .category(category)
+                .page(page);
+
+        webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category);
+        model.addAttribute("view", "category_index");
         return "list";
     }
 
