@@ -4,7 +4,6 @@ import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
-import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
 import com.unidev.polyembeddedcms.SQLitePolyService;
 import org.slf4j.Logger;
@@ -69,6 +68,16 @@ public class WebPolyCore {
         String tenant = fetchTenant(polyRequest.request());
         List<BasicPoly> polyList = sqLitePolyService.listNewPoly(polyRequest, tenant);
         return addPagination(polyRequest, urlBegin, polyList);
+    }
+
+    /**
+     * Check if exists poly or not
+     * @param polyQuery
+     * @return
+     */
+    public PolyRecord fetchPoly(WebPolyQuery polyQuery) {
+        String tenant = fetchTenant(polyQuery.request());
+        return sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
     }
 
     public WebPolyCore addPoly(WebPolyQuery polyQuery) {
