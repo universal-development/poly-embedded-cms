@@ -149,7 +149,7 @@ public class ProjectnameApplicationTests {
 		HttpServletRequest httpServletRequest = Mockito.mock(HttpServletRequest.class);
 		Mockito.doReturn(new StringBuffer("http://" + domain)).when(httpServletRequest).getRequestURL();
 
-		WebPolyQuery webPolyQuery = new WebPolyQuery().page(0L).itemPerPage(5);
+		WebPolyQuery webPolyQuery = new WebPolyQuery().page(0L).itemPerPage(5L);
 		webPolyQuery.model(new BindingAwareModelMap());
 		webPolyQuery.request(httpServletRequest);
 
