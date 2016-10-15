@@ -93,7 +93,7 @@ public class SQLitePolyService {
         if (listNewPolyQuery.getItemPerPage() != null ) {
             query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
             params.put(id++, listNewPolyQuery.getItemPerPage());
-            params.put(id++, listNewPolyQuery.getItemPerPage() * listNewPolyQuery.getPage());
+            params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage() - 1));
         }
 
         preparedStatement = connection.prepareStatement(query.toString());

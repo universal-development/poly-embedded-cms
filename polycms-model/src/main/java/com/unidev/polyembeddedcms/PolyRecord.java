@@ -2,6 +2,10 @@ package com.unidev.polyembeddedcms;
 
 
 import com.unidev.polydata.domain.BasicPoly;
+
+import java.io.IOException;
+import java.util.Map;
+
 import static com.unidev.polyembeddedcms.PolyConstants.*;
 
 /**
@@ -36,6 +40,16 @@ public class PolyRecord extends BasicPoly {
     public <T> PolyRecord data(T data) {
         put(DATA_KEY, data);
         return this;
+    }
+
+    public Map jsonData() {
+        String data = data();
+        try {
+            return PolyConstants.POLY_OBJECT_MAPPER.readValue(data, Map.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public <T> T count() {

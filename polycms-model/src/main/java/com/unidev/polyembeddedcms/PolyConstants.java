@@ -1,5 +1,9 @@
 package com.unidev.polyembeddedcms;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+
 /**
  * Constant keys used in poly records
  */
@@ -22,4 +26,10 @@ public class PolyConstants {
     public static final String CATEGORY_POLY = "category";
     public static final String TAGS_POLY = "tag";
     public static final String DATA_POLY = "data";
+
+    public static ObjectMapper POLY_OBJECT_MAPPER = new ObjectMapper() {{
+        configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+    }};
+
 }

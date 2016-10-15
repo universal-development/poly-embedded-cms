@@ -97,7 +97,7 @@ public class TestSQLitePolyService {
             sqLiteStorage.save(PolyConstants.DATA_POLY, data);
         }
 
-        PolyQuery listNewPolyQuery = query().page(0L).itemPerPage(5);
+        PolyQuery listNewPolyQuery = query().page(0L).itemPerPage(5L);
 
         List<BasicPoly> basicPolyList = sqlitePolyService.listNewPoly(listNewPolyQuery, tenant);
         assertThat(basicPolyList, is(notNullValue()));
@@ -108,7 +108,7 @@ public class TestSQLitePolyService {
         assertThat(tomatoList, is(notNullValue()));
         assertThat(tomatoList.size(), is(0));
 
-        PolyQuery tagsQuery = query().tag("tag1").itemPerPage(2);
+        PolyQuery tagsQuery = query().tag("tag1").itemPerPage(2L);
         List<BasicPoly> tagsList = sqlitePolyService.listNewPoly(tagsQuery, tenant);
         assertThat(tagsList, is(notNullValue()));
         assertThat(tagsList.size(), is(2));

@@ -1,6 +1,7 @@
 package com.unidev.polyembeddedcms;
 
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
 import org.junit.Before;
@@ -13,7 +14,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 
-@Ignore
+//@Ignore
 public class RecordGeneration {
 
     private PolyCore polyCore;
@@ -36,7 +37,7 @@ public class RecordGeneration {
     }
 
     @Test
-    public void testRecordGeneration() throws MalformedURLException, SQLiteStorageException {
+    public void testRecordGeneration() throws MalformedURLException, SQLiteStorageException, JsonProcessingException {
         SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
         sqLiteStorage.setPolyMigrators(Arrays.asList(new TagsPolyMigrator(), new CategoryPolyMigrator(), new DataPolyMigrator()));
 
@@ -55,7 +56,7 @@ public class RecordGeneration {
         PolyRecord potato = new PolyRecord()._id("potato").label("Potato").count(100);
         sqLiteStorage.save(PolyConstants.TAGS_POLY, potato);
 
-        for(int i = 1;i<10000;i++) {
+        for(int i = 1;i<1000;i++) {
 
             String postId = "post_" + i;
 
@@ -63,8 +64,9 @@ public class RecordGeneration {
             body.put("data", new Date() + "");
             body.put("record", i + "");
 
-            PolyRecord data = new PolyRecord()._id(postId).label("Updates record").category("updates").tags("potato, tomato").date(new Date());
-            data.data(body);
+            PolyRecord data = new PolyRecord()._id(postId).label("Post " + i).category("updates").tags("potato, tomato").date(new Date());
+            String stringData = PolyConstants.POLY_OBJECT_MAPPER.writeValueAsString(body);
+            data.data(stringData);
 
             //data.data();
             sqLiteStorage.save(PolyConstants.DATA_POLY, data);
