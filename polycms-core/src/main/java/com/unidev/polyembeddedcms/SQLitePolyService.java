@@ -148,6 +148,7 @@ public class SQLitePolyService {
      * @param id
      * @return poly instance or null if poly is not available
      */
+    //TODO: make fetchPoly to return optional
     public PolyRecord fetchPoly(String id, String tenant) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
 
