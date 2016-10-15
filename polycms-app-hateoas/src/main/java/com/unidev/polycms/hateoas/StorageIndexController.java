@@ -5,6 +5,8 @@ import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
 import com.unidev.polyembeddedcms.SQLitePolyService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
@@ -29,13 +31,16 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 @RestController
 public class StorageIndexController {
 
+    private static Logger LOG = LoggerFactory.getLogger(StorageIndexController.class);
+
+
     @Autowired
     private PolyCore polyCore;
 
     @Autowired
     private SQLitePolyService sqLitePolyService;
 
-    @GetMapping(value = "/storage/{storage}/index.json", produces= MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/storage/{storage}", produces= MediaType.APPLICATION_JSON_VALUE)
     public HateoasPolyIndex index(@PathVariable("storage") String storage) {
 
         PolyQuery polyQuery = PolyQuery.query();
@@ -46,7 +51,7 @@ public class StorageIndexController {
 
         HateoasPolyIndex index = hateoasPolyIndex();
 
-        LongStream.range(1, pages).forEach( page -> {
+        LongStream.range(1, pages+1).forEach( page -> {
             BasicPoly pageRecord  = new BasicPoly()._id(page + "");
             HateoasPoly hateoasPoly = hateoasPoly(pageRecord);
             Link link = linkTo(StoragePageController.class).slash("storage").slash(storage).slash("page").slash(page).withSelfRel();
