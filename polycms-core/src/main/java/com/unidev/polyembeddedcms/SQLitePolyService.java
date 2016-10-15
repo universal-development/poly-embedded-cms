@@ -63,6 +63,7 @@ public class SQLitePolyService {
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
             StringBuilder query = new StringBuilder("SELECT COUNT(*) AS polys FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
+            polyQuery.itemPerPage(null).page(null);
             preparedStatement = buildPolyQuery(polyQuery, connection, query);
             return Long.parseLong(sqLiteStorage.evaluateStatement(preparedStatement).get(0).get("polys") + "");
         } catch (Exception e) {

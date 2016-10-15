@@ -5,11 +5,13 @@ package com.unidev.polyembeddedcms;
  */
 public class PolyQuery {
 
+    public static final Long DEFAULT_ITEM_PER_PAGE = 30L;
+
     private String tag;
     private String category;
     private Long page = 0L;
 
-    private Integer itemPerPage = 20;
+    private Long itemPerPage = DEFAULT_ITEM_PER_PAGE;
 
     public PolyQuery() {}
 
@@ -42,7 +44,7 @@ public class PolyQuery {
         return (T) this;
     }
 
-    public <T extends PolyQuery> T itemPerPage(Integer itemPerPage) {
+    public <T extends PolyQuery> T itemPerPage(Long itemPerPage) {
         this.itemPerPage = itemPerPage;
         return (T) this;
     }
@@ -71,11 +73,11 @@ public class PolyQuery {
         this.page = page;
     }
 
-    public Integer getItemPerPage() {
+    public Long getItemPerPage() {
         return itemPerPage;
     }
 
-    public void setItemPerPage(Integer itemPerPage) {
+    public void setItemPerPage(Long itemPerPage) {
         this.itemPerPage = itemPerPage;
     }
 }
