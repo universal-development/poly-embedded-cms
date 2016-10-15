@@ -6,19 +6,26 @@ import org.springframework.hateoas.ResourceSupport;
 
 public class HateoasPoly extends ResourceSupport {
 
-    private PolyRecord polyRecord;
+    private PolyRecord poly;
 
-    public static HateoasPoly hateoasPoly(PolyRecord polyRecord) {
-        return new HateoasPoly().polyRecord(polyRecord);
+    public static HateoasPoly hateoasPoly(PolyRecord poly) {
+        return new HateoasPoly().poly(poly);
     }
 
-    public HateoasPoly polyRecord(PolyRecord polyRecord) {
-        this.polyRecord = polyRecord;
+    public HateoasPoly poly(PolyRecord poly) {
+        this.poly = poly;
         return this;
     }
 
-    public PolyRecord polyRecord() {
-        return polyRecord;
+    public PolyRecord poly() {
+        return poly;
     }
 
+    public PolyRecord getPoly() {
+        return poly;
+    }
+
+    public void setPoly(PolyRecord poly) {
+        this.poly = poly;
+    }
 }
