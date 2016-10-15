@@ -11,7 +11,7 @@ public class HateoasPolyIndex extends ResourceSupport {
     private HateoasPoly metadata;
     private List<HateoasPoly> list;
 
-    public HateoasPolyIndex hateoasPolyIndex() {
+    public static HateoasPolyIndex hateoasPolyIndex() {
         return new HateoasPolyIndex();
     }
 

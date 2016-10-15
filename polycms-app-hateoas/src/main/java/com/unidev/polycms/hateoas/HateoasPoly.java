@@ -1,27 +1,29 @@
 package com.unidev.polycms.hateoas;
 
 
+import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyRecord;
 import org.springframework.hateoas.ResourceSupport;
 
 public class HateoasPoly extends ResourceSupport {
 
-    private PolyRecord poly;
+    private Poly poly;
 
-    public static HateoasPoly hateoasPoly(PolyRecord poly) {
+    public static HateoasPoly hateoasPoly(Poly poly) {
         return new HateoasPoly().poly(poly);
     }
 
-    public HateoasPoly poly(PolyRecord poly) {
+    public HateoasPoly poly(Poly poly) {
         this.poly = poly;
         return this;
     }
 
-    public PolyRecord poly() {
+    public Poly poly() {
         return poly;
     }
 
-    public PolyRecord getPoly() {
+    public Poly getPoly() {
         return poly;
     }
 
