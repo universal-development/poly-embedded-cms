@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,37 +39,67 @@ public class SQLitePolyService {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
-            Integer id = 1;
-            Map<Integer, Object> params = new HashMap<>();
-
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
-
-            if (!StringUtils.isBlank(listNewPolyQuery.getCategory())) {
-                query.append(  " AND " + PolyConstants.CATEGORY_KEY + " = ?");
-                params.put(id++, listNewPolyQuery.getCategory() );
-            }
-
-            if (!StringUtils.isBlank(listNewPolyQuery.getTag())) {
-                query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
-                params.put(id++, "%" + listNewPolyQuery.getTag() + "%" );
-            }
-
-            query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
-            params.put(id++, listNewPolyQuery.getItemPerPage());
-            params.put(id++, listNewPolyQuery.getItemPerPage() * listNewPolyQuery.getPage());
-
-            preparedStatement = connection.prepareStatement(query.toString());
-            for(Map.Entry<Integer, Object> entry : params.entrySet()) {
-                preparedStatement.setObject(entry.getKey(), entry.getValue());
-            }
+            preparedStatement = buildPolyQuery(listNewPolyQuery, connection, query);
 
             List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
             return polyList;
         } catch (Exception e) {
             e.printStackTrace();
-            LOG.warn("Failed to fetch categories for tenant {}", tenant);
-            return null;
+            LOG.warn("Failed to fetch polys for tenant {}", tenant);
+            return Collections.EMPTY_LIST;
         }
+    }
+
+
+    /**
+     * Count polys by poly categories
+     * @param polyQuery
+     * @param tenant
+     * @return
+     */
+    public Long countPoly(PolyQuery polyQuery, String tenant) {
+        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+        PreparedStatement preparedStatement;
+        try(Connection connection = sqLiteStorage.openDb()) {
+            StringBuilder query = new StringBuilder("SELECT COUNT(*) AS polys FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
+            preparedStatement = buildPolyQuery(polyQuery, connection, query);
+            return Long.parseLong(sqLiteStorage.evaluateStatement(preparedStatement).get(0).get("polys") + "");
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOG.warn("Failed to count polys {}", tenant);
+            return 0L;
+        }
+    }
+
+    /**
+     * Generic method to build query on stored polys
+     */
+    private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, Connection connection, StringBuilder query) throws SQLException {
+        Integer id = 1;
+        Map<Integer, Object> params = new HashMap<>();
+        PreparedStatement preparedStatement;
+        if (!StringUtils.isBlank(listNewPolyQuery.getCategory())) {
+            query.append(  " AND " + PolyConstants.CATEGORY_KEY + " = ?");
+            params.put(id++, listNewPolyQuery.getCategory() );
+        }
+
+        if (!StringUtils.isBlank(listNewPolyQuery.getTag())) {
+            query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
+            params.put(id++, "%" + listNewPolyQuery.getTag() + "%" );
+        }
+
+        if (listNewPolyQuery.getItemPerPage() != null ) {
+            query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
+            params.put(id++, listNewPolyQuery.getItemPerPage());
+            params.put(id++, listNewPolyQuery.getItemPerPage() * listNewPolyQuery.getPage());
+        }
+
+        preparedStatement = connection.prepareStatement(query.toString());
+        for(Map.Entry<Integer, Object> entry : params.entrySet()) {
+            preparedStatement.setObject(entry.getKey(), entry.getValue());
+        }
+        return preparedStatement;
     }
 
     /**
