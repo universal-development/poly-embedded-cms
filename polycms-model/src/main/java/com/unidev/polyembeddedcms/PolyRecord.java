@@ -42,7 +42,7 @@ public class PolyRecord extends BasicPoly {
         return this;
     }
 
-    public Map jsonData() {
+    public Map getJsonData() {
         String data = data();
         try {
             return PolyConstants.POLY_OBJECT_MAPPER.readValue(data, Map.class);
