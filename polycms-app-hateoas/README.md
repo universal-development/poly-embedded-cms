@@ -7,5 +7,9 @@ Service for serving poly records
 
 
 ```
-curl -v http://localhost:8080/storage/localhost/index.json
+curl -v http://localhost:8080/storage/localhost
+```
+
+```
+curl -v http://localhost:8080/storage/localhost/page/2
 ```
