@@ -29,14 +29,14 @@ public class StoragePageController {
     private SQLitePolyService sqLitePolyService;
 
     @GetMapping(value = "/storage/{storage}/page/{page}", produces= MediaType.APPLICATION_JSON_VALUE)
-    public List<HateoasPoly> index(@PathVariable("storage") String storage, @PathVariable("page") Long page) {
+    public HateoasPolyIndex index(@PathVariable("storage") String storage, @PathVariable("page") Long page) {
         PolyQuery polyQuery = PolyQuery.query().page(page);
-        List<HateoasPoly> hateoasPolies = new ArrayList<>();
+        HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
         sqLitePolyService.listNewPoly(polyQuery, storage).forEach( poly -> {
-            hateoasPolies.add(hateoasPoly(poly));
+            hateoasPolyIndex.add(hateoasPoly(poly));
         });
 
-        return hateoasPolies;
+        return hateoasPolyIndex;
     }
 
 }
