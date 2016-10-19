@@ -3,6 +3,7 @@ package com.unidev.polycms.web;
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyRecord;
 import com.unidev.polyembeddedcms.SQLitePolyService;
@@ -85,6 +86,11 @@ public class WebPolyCore {
         PolyRecord polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
         polyQuery.model().addAttribute(POLY_KEY, polyRecord);
 
+        return this;
+    }
+
+    public WebPolyCore addPoly(WebPolyQuery polyQuery, Poly poly) {
+        polyQuery.model().addAttribute(POLY_KEY, poly);
         return this;
     }
 
