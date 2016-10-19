@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Core service for web app
@@ -76,15 +73,15 @@ public class WebPolyCore {
      * @param polyQuery
      * @return
      */
-    public PolyRecord fetchPoly(WebPolyQuery polyQuery) {
+    public Optional<PolyRecord> fetchPoly(WebPolyQuery polyQuery) {
         String tenant = fetchTenant(polyQuery.request());
         return sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
     }
 
     public WebPolyCore addPoly(WebPolyQuery polyQuery) {
         String tenant = fetchTenant(polyQuery.request());
-        PolyRecord polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
-        polyQuery.model().addAttribute(POLY_KEY, polyRecord);
+        Optional<PolyRecord> polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
+        polyQuery.model().addAttribute(POLY_KEY, polyRecord.get());
 
         return this;
     }
