@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import static com.unidev.polyembeddedcms.PolyQuery.query;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -74,14 +75,17 @@ public class TestSQLitePolyService {
         PolyRecord data = new PolyRecord()._id(postId).label("Tomato").category("Test").tags("tag1, tag2").date(new Date());
         sqLiteStorage.save(PolyConstants.DATA_POLY, data);
 
-        PolyRecord poly = sqlitePolyService.fetchPoly(postId, tenant);
+        Optional<PolyRecord> poly = sqlitePolyService.fetchPoly(postId, tenant);
 
         assertThat(poly, is(not(nullValue())));
-        assertThat(poly._id(), is(postId));
-        assertThat(poly.date(), is(notNullValue()));
+        assertThat(poly.isPresent(), is(true));
+        assertThat(poly.get()._id(), is(postId));
+        assertThat(poly.get().date(), is(notNullValue()));
 
-        PolyRecord notExistingPoly = sqlitePolyService.fetchPoly("not-existing-id", tenant);
-        assertThat(notExistingPoly, is(nullValue()));
+        Optional<PolyRecord> notExistingPoly = sqlitePolyService.fetchPoly("not-existing-id", tenant);
+        assertThat(notExistingPoly, is(not(nullValue())));
+        assertThat(notExistingPoly.isPresent(), is(false));
+
 
     }
 

@@ -155,7 +155,7 @@ public class SQLitePolyService {
             preparedStatement.setObject(1, id);
             List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
             if (polyList.size() != 1) {
-                return null;
+                return Optional.empty();
             }
             return Optional.of(new PolyRecord(polyList.get(0)));
         } catch (Exception e) {

@@ -81,7 +81,12 @@ public class WebPolyCore {
     public WebPolyCore addPoly(WebPolyQuery polyQuery) {
         String tenant = fetchTenant(polyQuery.request());
         Optional<PolyRecord> polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
-        polyQuery.model().addAttribute(POLY_KEY, polyRecord.get());
+
+        if (polyRecord.isPresent()) {
+            polyQuery.model().addAttribute(POLY_KEY, polyRecord.get());
+        } else {
+            LOG.warn("Poly {} not found for tenant", polyQuery.polyId(), tenant);
+        }
 
         return this;
     }
