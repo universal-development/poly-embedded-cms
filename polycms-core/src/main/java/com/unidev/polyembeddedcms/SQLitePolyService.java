@@ -12,10 +12,7 @@ import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Service for managing poly records
@@ -148,8 +145,8 @@ public class SQLitePolyService {
      * @param id
      * @return poly instance or null if poly is not available
      */
-    //TODO: make fetchPoly to return optional
-    public PolyRecord fetchPoly(String id, String tenant) {
+
+    public Optional<PolyRecord> fetchPoly(String id, String tenant) {
         SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
 
         PreparedStatement preparedStatement;
@@ -160,11 +157,11 @@ public class SQLitePolyService {
             if (polyList.size() != 1) {
                 return null;
             }
-            return new PolyRecord(polyList.get(0));
+            return Optional.of(new PolyRecord(polyList.get(0)));
         } catch (Exception e) {
             e.printStackTrace();
             LOG.warn("Failed to fetch poly {} for tenant {}", id, tenant);
-            return null;
+            return Optional.empty();
         }
     }
 
