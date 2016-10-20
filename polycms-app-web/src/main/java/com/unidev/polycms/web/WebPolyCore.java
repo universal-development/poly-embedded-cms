@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.util.*;
 
+import static com.unidev.polydata.FlatFileStorageMapper.*;
+
 /**
  * Core service for web app
  */
@@ -42,8 +44,11 @@ public class WebPolyCore {
 
 
     public String fetchTemplateRoot(WebPolyQuery polyRequest) {
-        FlatFileStorage flatFileStorage = fetchTenantFlatFileStorage(polyRequest.request());
-        return flatFileStorage.metadata().get(TEMPLATE_KEY) + "";
+        Optional<FlatFileStorage> flatFileStorage = fetchTenantFlatFileStorage(polyRequest.request());
+        if (!flatFileStorage.isPresent()) {
+            return "blog";
+        }
+        return flatFileStorage.get().metadata().fetch(TEMPLATE_KEY, "blog");
     }
 
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
@@ -141,12 +146,14 @@ public class WebPolyCore {
     }
 
 
-    public FlatFileStorage fetchTenantFlatFileStorage(HttpServletRequest httpServletRequest) {
+    public Optional<FlatFileStorage> fetchTenantFlatFileStorage(HttpServletRequest httpServletRequest) {
         String tenant = fetchTenant(httpServletRequest);
         File tenantRoot = polyCore.fetchStorageRoot(tenant);
         File flatFile = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
-
-        return FlatFileStorageMapper.storageMapper().loadSource(flatFile).load();
+        if (!flatFile.exists()) {
+            return Optional.empty();
+        }
+        return Optional.of(storageMapper().loadSource(flatFile).load());
     }
 
     public WebPolyCore( @Autowired SQLitePolyService sqLitePolyService, @Autowired WebUtils webUtils, @Autowired PolyCore polyCore) {
