@@ -28,6 +28,7 @@ public class WebPolyCore {
     public static final String TAGS_KEY = "tags";
     public static final String POLY_KEY = "poly";
     public static final String ITEMS_KEY = "items";
+    public static final String POLY_REQUEST_KEY = "polyRequest";
 
     public static final String TEMPLATE_KEY = "template";
 
@@ -66,7 +67,7 @@ public class WebPolyCore {
      * @return
      */
     public WebPolyCore addSupportModel(WebPolyQuery polyRequest) {
-        polyRequest.model().addAttribute("polyRequest", polyRequest); // link to own request, recursion(?)
+        polyRequest.model().addAttribute(POLY_REQUEST_KEY, polyRequest); // link to own request, recursion(?)
         return addCategories(polyRequest).addTags(polyRequest);
     }
 
