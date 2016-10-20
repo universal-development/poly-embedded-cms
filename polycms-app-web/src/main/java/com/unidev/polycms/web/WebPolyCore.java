@@ -2,8 +2,10 @@ package com.unidev.polycms.web;
 
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polydata.FlatFileStorage;
+import com.unidev.polydata.FlatFileStorageMapper;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polydata.domain.Poly;
+import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyRecord;
 import com.unidev.polyembeddedcms.SQLitePolyService;
@@ -27,6 +29,8 @@ public class WebPolyCore {
     public static final String POLY_KEY = "poly";
     public static final String ITEMS_KEY = "items";
 
+    public static final String TEMPLATE_KEY = "template";
+
     private static Logger LOG = LoggerFactory.getLogger(WebPolyCore.class);
 
     private SQLitePolyService sqLitePolyService;
@@ -36,6 +40,10 @@ public class WebPolyCore {
     private PolyCore polyCore;
 
 
+    public String fetchTemplateRoot(WebPolyQuery polyRequest) {
+        FlatFileStorage flatFileStorage = fetchTenantFlatFileStorage(polyRequest.request());
+        return flatFileStorage.metadata().get(TEMPLATE_KEY) + "";
+    }
 
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
         String tenant = fetchTenant(polyRequest.request());
@@ -132,11 +140,12 @@ public class WebPolyCore {
     }
 
 
-    public FlatFileStorage fetchTenatnStorage(HttpServletRequest httpServletRequest) {
+    public FlatFileStorage fetchTenantFlatFileStorage(HttpServletRequest httpServletRequest) {
         String tenant = fetchTenant(httpServletRequest);
         File tenantRoot = polyCore.fetchStorageRoot(tenant);
+        File flatFile = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
 
-        return null;
+        return FlatFileStorageMapper.storageMapper().loadSource(flatFile).load();
     }
 
     public WebPolyCore( @Autowired SQLitePolyService sqLitePolyService, @Autowired WebUtils webUtils, @Autowired PolyCore polyCore) {
