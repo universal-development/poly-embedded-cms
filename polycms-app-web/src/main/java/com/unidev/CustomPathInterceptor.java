@@ -51,7 +51,7 @@ public class CustomPathInterceptor {
 
     }
 
-    @ExceptionHandler
+    @ExceptionHandler(Throwable.class)
     public String errorHandler(HttpServletRequest request, Exception e, Model model)   {
         LOG.debug("errorHandler {}", request.getRequestURI());
         WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
