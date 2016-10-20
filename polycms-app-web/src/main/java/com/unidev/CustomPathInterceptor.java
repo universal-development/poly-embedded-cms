@@ -40,16 +40,27 @@ public class CustomPathInterceptor {
                 .request(request)
                 .polyId(request.getRequestURI().substring(1))
                 ;
-
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
         Optional<PolyRecord> polyRecord = webPolyCore.fetchPoly(polyQuery);
         if (polyRecord.isPresent()) {
             webPolyCore.addSupportModel(polyQuery).addPoly(polyQuery, polyRecord.get());
             model.addAttribute("view", "poly");
-            return "poly";
+            return template + "/poly";
         }
-        return "404";
+        return template + "/404";
 
+    }
 
+    @ExceptionHandler
+    public String errorHandler(HttpServletRequest request, Exception e, Model model)   {
+        LOG.debug("errorHandler {}", request.getRequestURI());
+        WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
+                .model(model)
+                .request(request)
+                .polyId(request.getRequestURI().substring(1))
+                ;
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/error";
 
     }
 

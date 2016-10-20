@@ -29,6 +29,7 @@ public class PolyController {
                 ;
         webPolyCore.addSupportModel(polyQuery).addPoly(polyQuery);
         model.addAttribute("view", "poly");
-        return "poly";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/poly";
     }
 }

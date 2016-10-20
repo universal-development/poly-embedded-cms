@@ -45,7 +45,8 @@ public class IndexController {
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/page/");
         model.addAttribute("view", "index");
 
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
     @RequestMapping("/page/{page}")
@@ -59,7 +60,8 @@ public class IndexController {
                 .page(page);
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/page/");
         model.addAttribute("view", "index");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
 
@@ -74,7 +76,8 @@ public class IndexController {
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category +"/page/");
         model.addAttribute("view", "category_index");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
     @RequestMapping(value = "/category/{category}/page/{page}")
@@ -90,7 +93,8 @@ public class IndexController {
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/category/"+category +"/page/" );
         model.addAttribute("view", "category_index");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
     @RequestMapping(value = "/tags")
@@ -101,7 +105,8 @@ public class IndexController {
                 ;
         webPolyCore.addSupportModel(polyQuery);
         model.addAttribute("view", "tags");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
     @RequestMapping(value = "/tag/{tag}")
@@ -114,7 +119,8 @@ public class IndexController {
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag +"/page/" );
         model.addAttribute("view", "tags_index");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 
     @RequestMapping(value = "/tag/{tag}/page/{page}")
@@ -130,6 +136,7 @@ public class IndexController {
 
         webPolyCore.addSupportModel(polyQuery).addNew(polyQuery, "/tag/"+tag +"/page/");
         model.addAttribute("view", "tags_index");
-        return "list";
+        String template = webPolyCore.fetchTemplateRoot(polyQuery);
+        return template + "/list";
     }
 }
