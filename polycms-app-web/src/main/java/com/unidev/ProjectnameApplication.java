@@ -4,19 +4,16 @@ import ch.qos.logback.classic.ViewStatusMessagesServlet;
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polyembeddedcms.PolyCore;
 import org.jminix.console.servlet.MiniConsoleServlet;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.web.servlet.handler.SimpleUrlHandlerMapping;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -26,7 +23,7 @@ import java.io.File;
 @ComponentScan("com.unidev")
 @EnableCaching
 @EnableWebSecurity
-public class ProjectnameApplication extends WebSecurityConfigurerAdapter implements ServletContextInitializer {
+public class ProjectnameApplication extends SpringBootServletInitializer implements ServletContextInitializer {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectnameApplication.class, args);
@@ -44,26 +41,8 @@ public class ProjectnameApplication extends WebSecurityConfigurerAdapter impleme
 	private String storageRoot;
 
 	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http
-				.authorizeRequests()
-				.antMatchers("/jmx/**", "/logs").hasRole("ADMIN")
-				.antMatchers("/**", "/").permitAll()
-				.anyRequest().authenticated()
-				.and()
-				.formLogin()
-				.loginPage("/login")
-				.permitAll()
-				.and()
-				.logout()
-				.permitAll();
-	}
-
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-		auth
-				.inMemoryAuthentication()
-				.withUser(adminUser).password(adminPassword).roles("ADMIN");
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(ProjectnameApplication.class);
 	}
 
 	@Override
