@@ -10,13 +10,6 @@ import org.springframework.web.servlet.view.InternalResourceViewResolver;
 @Configuration
 public class MvcConfig extends WebMvcConfigurerAdapter {
 
-    @Bean
-    public ViewResolver getViewResolver() {
-        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
-        resolver.setSuffix(".jsp");
-        return resolver;
-    }
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addViewController("/login").setViewName("login");
