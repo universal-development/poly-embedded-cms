@@ -34,7 +34,7 @@ public class CustomPathInterceptor {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public String handleCustomPath(HttpServletRequest request, Exception e, Model model)   {
-        LOG.debug("handleCustomPath {}", request.getRequestURI());
+        LOG.info("handleCustomPath {}", request.getRequestURI());
         WebPolyQuery polyQuery = WebPolyQuery.polyRequest()
                 .model(model)
                 .request(request)

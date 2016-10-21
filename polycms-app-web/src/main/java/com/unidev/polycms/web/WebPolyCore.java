@@ -46,9 +46,9 @@ public class WebPolyCore {
     public String fetchTemplateRoot(WebPolyQuery polyRequest) {
         Optional<FlatFileStorage> flatFileStorage = fetchTenantFlatFileStorage(polyRequest.request());
         if (!flatFileStorage.isPresent()) {
-            return "blog";
+            return "";
         }
-        return flatFileStorage.get().metadata().fetch(TEMPLATE_KEY, "blog");
+        return flatFileStorage.get().metadata().fetch(TEMPLATE_KEY, "");
     }
 
     public WebPolyCore addCategories(WebPolyQuery polyRequest) {
