@@ -6,7 +6,7 @@
               xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <#list 1..pages as page>
         <sitemap>
-            <loc>${schema}://${domain}/sitemap_${page}.xml</loc>
+            <loc>${schema}://${domain}/sitemap/${page}.xml</loc>
             <lastmod>${date?date}</lastmod>
         </sitemap>
     </#list>
