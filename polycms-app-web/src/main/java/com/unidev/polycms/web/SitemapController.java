@@ -10,13 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 
 @Controller
 public class SitemapController {
 
-    private static final Long ITEM_PER_PAGE = 10L;
+    private static final Long ITEM_PER_PAGE = 10000L;
 
     @Autowired
     private WebPolyCore webPolyCore;
@@ -27,9 +28,9 @@ public class SitemapController {
     @Autowired
     private HttpServletRequest context;
 
-    @RequestMapping(value = "/sitemap.xml",method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public String sitemapIndexFiles(Model model) throws IOException {
-
+    @RequestMapping(value = "/sitemap.xml",method = RequestMethod.GET)
+    public String sitemapIndexFiles(Model model, HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.APPLICATION_XML_VALUE);
         String domain = webUtils.removeWWW(webUtils.getDomain(context));
         model.addAttribute("schema", context.getScheme());
         model.addAttribute("domain", domain);
@@ -58,7 +59,8 @@ public class SitemapController {
     }
 
     @RequestMapping("/sitemap/{page}.xml")
-    public String sitemapFile(@PathVariable("page") Long page, Model model) {
+    public String sitemapFile(@PathVariable("page") Long page, Model model, HttpServletResponse response) {
+        response.setContentType(MediaType.APPLICATION_XML_VALUE);
         if (page <= 0) {
             page = 1L;
         }
@@ -75,13 +77,15 @@ public class SitemapController {
         return "sitemap.xml";
     }
 
-    @RequestMapping(value = "/sitemapindex.xsl",method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public String sitemapIndex() {
+    @RequestMapping(value = "/sitemapindex.xsl",method = RequestMethod.GET)
+    public String sitemapIndex(HttpServletResponse response) {
+        response.setContentType(MediaType.APPLICATION_XML_VALUE);
         return "sitemapindex.xsl";
     }
 
-    @RequestMapping(value = "/sitemap.xsl",method = RequestMethod.GET, produces = MediaType.APPLICATION_XML_VALUE)
-    public String sitemap() throws IOException {
+    @RequestMapping(value = "/sitemap.xsl",method = RequestMethod.GET)
+    public String sitemap(HttpServletResponse response) throws IOException {
+        response.setContentType(MediaType.APPLICATION_XML_VALUE);
         return "sitemap.xsl";
     }
 
