@@ -92,6 +92,11 @@ public class WebPolyCore {
         return sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
     }
 
+    public Long fetchPolyCount(WebPolyQuery polyQuery) {
+        String tenant = fetchTenant(polyQuery.request());
+        return sqLitePolyService.countPoly(polyQuery, tenant);
+    }
+
     public WebPolyCore addPoly(WebPolyQuery polyQuery) {
         String tenant = fetchTenant(polyQuery.request());
         Optional<PolyRecord> polyRecord = sqLitePolyService.fetchPoly(polyQuery.polyId(), tenant);
