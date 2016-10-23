@@ -31,7 +31,9 @@ Categories: <br/>
 Items: <br/>
 
 <c:forEach var="item" items="${items}" >
-    ${item}
+    <a href="/${item._id}">${item.label}</a> <br/>
+    ${item} <br/>
+    ${item.tags} <br/>
 </c:forEach>
 
 
