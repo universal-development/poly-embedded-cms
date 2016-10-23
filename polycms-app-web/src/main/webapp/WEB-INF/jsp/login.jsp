@@ -1,3 +1,7 @@
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@taglib prefix="s" uri="http://www.springframework.org/tags" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,17 +28,19 @@
 
     <div id="loginbox" class="mainbox col-md-6 col-md-offset-3 col-sm-6 col-sm-offset-3">
 
-        <div th:if="${param.error}">
-            <div class="alert alert-warning">
-                Invalid username and password.
-            </div>
-        </div>
-        <div th:if="${param.logout}">
-            <div class="alert alert-warning">
-                You have been logged out.
-            </div>
-        </div>
+<c:if test="${param.error}">
+    <div class="alert alert-warning">
+        Invalid username and password. <br/>
+        ${param.error}
+    </div>
+</c:if>
 
+        <c:if test="${param.logout}">
+            <div class="alert alert-warning">
+                You have been logged out. <br/>
+                    ${param.logout}
+            </div>
+        </c:if>
 
 
         <div class="panel panel-default" >
@@ -44,7 +50,11 @@
 
             <div class="panel-body" >
 
-                <form name="form" id="form" class="form-horizontal"  th:action="@{/login}" method="post">
+                <form name="form" id="form" class="form-horizontal"  action="/login" method="post">
+
+                    <input type="hidden"
+                           name="${_csrf.parameterName}"
+                           value="${_csrf.token}"/>
 
                     <div class="input-group">
                         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
