@@ -3,7 +3,7 @@ package com.unidev;
 import ch.qos.logback.classic.ViewStatusMessagesServlet;
 import com.unidev.platform.j2ee.common.WebUtils;
 import com.unidev.polyembeddedcms.PolyCore;
-import com.unidev.polyembeddedcms.SQLitePolyService;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyService;
 import org.jminix.console.servlet.MiniConsoleServlet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

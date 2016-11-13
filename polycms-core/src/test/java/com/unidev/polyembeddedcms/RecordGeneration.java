@@ -4,6 +4,7 @@ package com.unidev.polyembeddedcms;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyService;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

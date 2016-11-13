@@ -3,22 +3,17 @@ package com.unidev.polycms.hateoas;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
-import com.unidev.polyembeddedcms.PolyRecord;
-import com.unidev.polyembeddedcms.SQLitePolyService;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Link;
-import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.stream.LongStream;
 
 import static com.unidev.polycms.hateoas.HateoasPoly.hateoasPoly;

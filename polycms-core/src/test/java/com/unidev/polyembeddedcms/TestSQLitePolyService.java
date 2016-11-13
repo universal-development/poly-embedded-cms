@@ -3,9 +3,9 @@ package com.unidev.polyembeddedcms;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.SQLiteStorageException;
 import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyService;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.net.MalformedURLException;

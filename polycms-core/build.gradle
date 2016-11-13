@@ -1,7 +1,9 @@
 
 dependencies {
-	compile "com.unidev.polydata:polydata-manager-sqlite:$project.polydataStorageVersion"
-	compile "com.unidev.polydata:polydata-storage-sqlite:$project.polydataStorageVersion"
+
+	compile group: 'org.xerial', name: 'sqlite-jdbc', version: '3.15.1'
+	compile "com.fasterxml.jackson.core:jackson-databind:2.8.1"
+	compile "org.flywaydb:flyway-core:4.0.3"
 
 	compile "com.unidev.polydata:polydata-flat-file-storage:$project.polydataStorageVersion"
 	compile "com.unidev.platform:unidev-spring-common:$project.unidevPlatformVersion"

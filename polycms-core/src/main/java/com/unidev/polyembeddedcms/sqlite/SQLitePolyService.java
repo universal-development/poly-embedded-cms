@@ -1,9 +1,13 @@
-package com.unidev.polyembeddedcms;
+package com.unidev.polyembeddedcms.sqlite;
 
 
 import com.unidev.polydata.PolyManagerSQLite;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polyembeddedcms.PolyConstants;
+import com.unidev.polyembeddedcms.PolyCore;
+import com.unidev.polyembeddedcms.PolyQuery;
+import com.unidev.polyembeddedcms.PolyRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -37,11 +42,13 @@ public class SQLitePolyService {
      */
     public List<BasicPoly> listNewPoly(PolyQuery listNewPolyQuery, String tenant) {
 
-        PolyManagerSQLite sqLiteStorage = fetchSqliteManager(tenant);
+        SQLiteStorage sqLiteStorage = fetchSQLiteDB(tenant);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
             preparedStatement = buildPolyQuery(listNewPolyQuery, connection, query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
 
             List<BasicPoly> polyList = sqLiteStorage.evaluateStatement(preparedStatement);
             return polyList;
