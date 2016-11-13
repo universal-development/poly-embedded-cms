@@ -42,7 +42,7 @@ public class SQLitePolyService {
      */
     public List<BasicPoly> listNewPoly(PolyQuery listNewPolyQuery, String tenant) {
 
-        SQLiteStorage sqLiteStorage = fetchSQLiteDB(tenant);
+        SQLitePolyStorage sqLiteStorage = fetchSQLiteDB(tenant);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
@@ -67,7 +67,7 @@ public class SQLitePolyService {
      * @return
      */
     public Long countPoly(PolyQuery polyQuery, String tenant) {
-        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+        SQLitePolyStorage sqLiteStorage = fetchSqliteDB(tenant);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
             StringBuilder query = new StringBuilder("SELECT COUNT(*) AS polys FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
@@ -116,7 +116,7 @@ public class SQLitePolyService {
      * @return
      */
     public List<BasicPoly> fetchCategories(String tenant) {
-        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+        SQLitePolyStorage sqLiteStorage = fetchSqliteDB(tenant);
 
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
@@ -136,7 +136,7 @@ public class SQLitePolyService {
      * @return
      */
     public List<BasicPoly> fetchTags(String tenant) {
-        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+        SQLitePolyStorage sqLiteStorage = fetchSqliteDB(tenant);
 
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
@@ -158,7 +158,7 @@ public class SQLitePolyService {
      */
 
     public Optional<PolyRecord> fetchPoly(String id, String tenant) {
-        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+        SQLitePolyStorage sqLiteStorage = fetchSqliteDB(tenant);
 
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
@@ -189,10 +189,10 @@ public class SQLitePolyService {
         return fetchTenantRoot(tenant).exists();
     }
 
-    private SQLiteStorage fetchSQLiteDB(String tenant) {
+    private SQLitePolyStorage fetchSQLiteDB(String tenant) {
         File tenantRoot = fetchTenantRoot(tenant);
         File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
-        SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
+        SQLitePolyStorage sqLiteStorage = new SQLitePolyStorage(dbFile.getAbsolutePath());
         return sqLiteStorage;
     }
 
