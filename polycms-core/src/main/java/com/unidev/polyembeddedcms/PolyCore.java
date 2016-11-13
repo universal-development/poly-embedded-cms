@@ -2,11 +2,9 @@ package com.unidev.polyembeddedcms;
 
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.FlatFileStorageMapper;
-import com.unidev.polydata.domain.BasicPoly;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.Arrays;
