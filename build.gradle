@@ -1,10 +1,10 @@
-project.ext.polydataStorageVersion = "2.0.0-SNAPSHOT"
+project.ext.polydataStorageVersion = "2.0.0"
 project.ext.unidevPlatformVersion = "2.0.0"
 
 subprojects {
 
     group = 'com.unidev.polyembeddedcms'
-    version = '0.0.1-SNAPSHOT'
+    version = '0.0.1'
 
     apply plugin: 'maven'
     apply plugin: 'java'
