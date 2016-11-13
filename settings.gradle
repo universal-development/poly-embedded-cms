@@ -1,4 +1,4 @@
 include "polycms-model"
 include "polycms-core"
 include "polycms-app-hateoas"
-include "polycms-app-web"
+//include "polycms-app-web"
