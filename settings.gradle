@@ -1,5 +1,4 @@
 include "polycms-model"
 include "polycms-core"
-include "polycms-migrators"
 include "polycms-app-hateoas"
 include "polycms-app-web"
