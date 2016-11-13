@@ -1,6 +1,7 @@
 package com.unidev.polyembeddedcms;
 
 
+import com.unidev.polydata.PolyManagerSQLite;
 import com.unidev.polydata.SQLiteStorage;
 import com.unidev.polydata.domain.BasicPoly;
 import org.apache.commons.lang3.StringUtils;
@@ -28,12 +29,15 @@ public class SQLitePolyService {
         this.polyCore = polyCore;
     }
 
+    //
+
     /**
      * List polys filtered by page, category, tag and ordered by date
      * @return
      */
     public List<BasicPoly> listNewPoly(PolyQuery listNewPolyQuery, String tenant) {
-        SQLiteStorage sqLiteStorage = fetchSqliteDB(tenant);
+
+        PolyManagerSQLite sqLiteStorage = fetchSqliteManager(tenant);
         PreparedStatement preparedStatement;
         try(Connection connection = sqLiteStorage.openDb()) {
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
@@ -178,10 +182,16 @@ public class SQLitePolyService {
         return fetchTenantRoot(tenant).exists();
     }
 
-    private SQLiteStorage fetchSqliteDB(String tenant) {
+    private SQLiteStorage fetchSQLiteDB(String tenant) {
         File tenantRoot = fetchTenantRoot(tenant);
         File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
-        return new SQLiteStorage(dbFile.getAbsolutePath());
+        SQLiteStorage sqLiteStorage = new SQLiteStorage(dbFile.getAbsolutePath());
+        return sqLiteStorage;
+    }
+
+    private PolyManagerSQLite fetchSqliteManager(String tenant) {
+        PolyManagerSQLite polyManagerSQLite = new PolyManagerSQLite(fetchSQLiteDB(tenant));
+        return polyManagerSQLite;
     }
 
 
