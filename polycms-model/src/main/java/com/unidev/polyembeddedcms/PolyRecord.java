@@ -4,6 +4,7 @@ package com.unidev.polyembeddedcms;
 import com.unidev.polydata.domain.BasicPoly;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 
 import static com.unidev.polyembeddedcms.PolyConstants.*;
@@ -70,20 +71,20 @@ public class PolyRecord extends BasicPoly {
         return this;
     }
 
-    public <T> T category() {
+    public String category() {
         return fetch(CATEGORY_KEY);
     }
 
-    public <T> PolyRecord category(T category) {
+    public PolyRecord category(String category) {
         put(CATEGORY_KEY, category);
         return this;
     }
 
-    public <T> T tags() {
+    public List<String> tags() {
         return fetch(TAGS_KEY);
     }
 
-    public <T> PolyRecord tags(T tags) {
+    public PolyRecord tags(List<String> tags) {
         put(TAGS_KEY, tags);
         return this;
     }

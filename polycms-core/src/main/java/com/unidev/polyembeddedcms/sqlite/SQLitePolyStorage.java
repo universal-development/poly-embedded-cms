@@ -62,6 +62,11 @@ public class SQLitePolyStorage {
         flyway.migrate();
     }
 
+    /**
+     * Fetch poly by id
+     * @param id
+     * @return
+     */
     public Optional<PolyRecord> fetchPoly(String id) {
 
         PreparedStatement preparedStatement;
@@ -82,6 +87,11 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * Remove poly from db
+     * @param id
+     * @return
+     */
     public boolean removePoly(String id) {
         try(Connection connection = openDb()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?");
@@ -93,6 +103,11 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * List poly
+     * @param polyQuery
+     * @return
+     */
     public List<PolyRecord> listPoly(PolyQuery polyQuery) {
         List<PolyRecord> polyList = new ArrayList<>();
 
@@ -177,7 +192,7 @@ public class SQLitePolyStorage {
         }
 
         if (listNewPolyQuery.getItemPerPage() != null ) {
-            query.append(" ORDER BY date DESC LIMIT ? OFFSET ?");
+            query.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
             params.put(id++, listNewPolyQuery.getItemPerPage());
             params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage() - 1));
         }
