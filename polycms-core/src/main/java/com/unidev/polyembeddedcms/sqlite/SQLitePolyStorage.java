@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.unidev.platform.common.utils.StringUtils;
+import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
@@ -113,25 +114,51 @@ public class SQLitePolyStorage {
         }
     }
 
-    public List<PolyRecord> countPoly(PolyQuery polyQuery) {
+    public long countPoly(PolyQuery polyQuery) {
         List<PolyRecord> polyList = new ArrayList<>();
 
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
-            StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
+            StringBuilder query = new StringBuilder("SELECT COUNT(*) as count FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
             polyQuery.itemPerPage(null).page(null);
             preparedStatement = buildPolyQuery(polyQuery, connection, query);
 
             ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                polyList.add(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
-            }
-
-            return polyList;
+            return resultSet.getLong("count");
         } catch (Exception e) {
             LOG.warn("Failed to fetch polys", e);
-            return Collections.EMPTY_LIST;
+            return 0;
+        }
+    }
+
+    public void persistPoly(PolyRecord poly) {
+        try(Connection connection = openDb()) {
+
+            String rawJSON = OBJECT_MAPPER.writeValueAsString(poly);
+
+            PreparedStatement dataStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?;");
+            dataStatement.setString(1, poly._id());
+            ResultSet dataResultSet = dataStatement.executeQuery();
+
+
+            if (!dataResultSet.next()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + PolyConstants.DATA_POLY + "(_id, category, tags, data) VALUES(?, ?, ?, ?);");
+                preparedStatement.setString(1, poly._id());
+                preparedStatement.setString(2, poly.category());
+                preparedStatement.setString(3, String.join(",",poly.tags()));
+                preparedStatement.setObject(4, rawJSON);
+                preparedStatement.executeUpdate();
+            } else {
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + PolyConstants.DATA_POLY + "(id, _id, category, tags, data) VALUES(?, ?, ?, ?, ?);");
+                preparedStatement.setObject(1, dataResultSet.getObject("id"));
+                preparedStatement.setString(2, poly._id());
+                preparedStatement.setString(3, poly.category());
+                preparedStatement.setString(4, String.join(",",poly.tags()));
+                preparedStatement.setObject(5, rawJSON);
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to import poly {}", poly, e);
         }
     }
 
