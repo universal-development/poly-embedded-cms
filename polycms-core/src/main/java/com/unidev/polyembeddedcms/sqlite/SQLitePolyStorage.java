@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.unidev.platform.common.utils.StringUtils;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyConstants;
+import com.unidev.polyembeddedcms.PolyCoreException;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
 import org.flywaydb.core.Flyway;
@@ -177,6 +178,25 @@ public class SQLitePolyStorage {
         }
     }
 
+    // categories
+
+
+
+    // tags
+
+    public List<PolyRecord> fetchTags() {
+        PreparedStatement preparedStatement;
+        try(Connection connection = openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.TAGS_POLY + " ORDER BY count DESC");
+            return evaluateStatement(preparedStatement);
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch tags for tenant",e);
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+
+
     private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, Connection connection, StringBuilder query) throws SQLException {
         Integer id = 1;
         Map<Integer, Object> params = new HashMap<>();
@@ -202,6 +222,30 @@ public class SQLitePolyStorage {
             preparedStatement.setObject(entry.getKey(), entry.getValue());
         }
         return preparedStatement;
+    }
+
+
+    /**
+     * Evaluate statement and transform results to poly records
+     * @param preparedStatement
+     * @return
+     * @throws PolyCoreException
+     */
+    private List<PolyRecord> evaluateStatement(PreparedStatement preparedStatement) throws PolyCoreException {
+
+        List<PolyRecord> polyList = new ArrayList<>();
+        try {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
+                polyList.add(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+            }
+            return polyList;
+        } catch (Exception e) {
+            LOG.warn("Failed to evaluate statement", e);
+            throw new PolyCoreException(e);
+        }
     }
 
 }
