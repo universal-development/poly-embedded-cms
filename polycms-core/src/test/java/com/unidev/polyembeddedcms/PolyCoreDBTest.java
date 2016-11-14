@@ -53,6 +53,14 @@ public class PolyCoreDBTest {
         PolyRecord firstRecord = listPoly.get(0);
         assertThat(firstRecord._id(), is("potato"));
 
+        boolean removeResult = sqLitePolyStorage.removePoly("potato");
+        assertThat(removeResult, is(true));
+
+        long countAfterRemoval = sqLitePolyStorage.countPoly(new PolyQuery());
+        assertThat(countAfterRemoval, is(0L));
+
+        boolean againRemovalResult = sqLitePolyStorage.removePoly("potato");
+        assertThat(againRemovalResult, is(false));
     }
 
     @Test
