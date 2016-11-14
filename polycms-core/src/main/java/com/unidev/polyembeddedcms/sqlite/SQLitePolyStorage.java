@@ -1,8 +1,5 @@
 package com.unidev.polyembeddedcms.sqlite;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.unidev.platform.common.utils.StringUtils;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCoreException;
@@ -15,18 +12,14 @@ import org.slf4j.LoggerFactory;
 import java.sql.*;
 import java.util.*;
 
+import static com.unidev.polyembeddedcms.PolyConstants.POLY_OBJECT_MAPPER;
+
 /**
  * SQLite based poly storage
  */
 public class SQLitePolyStorage {
 
     private static Logger LOG = LoggerFactory.getLogger(SQLitePolyStorage.class);
-
-    public static ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-    {
-        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-    }
 
     static {
         try {
@@ -96,7 +89,7 @@ public class SQLitePolyStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                polyList.add(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+                polyList.add(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
             }
 
             return polyList;
@@ -135,7 +128,7 @@ public class SQLitePolyStorage {
     public void persistPoly(PolyRecord poly) {
         try(Connection connection = openDb()) {
 
-            String rawJSON = OBJECT_MAPPER.writeValueAsString(poly);
+            String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(poly);
 
             PreparedStatement dataStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?;");
             dataStatement.setString(1, poly._id());
@@ -259,7 +252,7 @@ public class SQLitePolyStorage {
              ResultSet resultSet = preparedStatement.executeQuery();
              if (resultSet.next()) {
                  String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                 return Optional.of(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+                 return Optional.of(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
              }
              return Optional.empty();
          } catch (Exception e) {
@@ -282,7 +275,7 @@ public class SQLitePolyStorage {
     public void persistSupportPoly(String table, PolyRecord polyRecord) {
         try(Connection connection = openDb()) {
 
-            String rawJSON = OBJECT_MAPPER.writeValueAsString(polyRecord);
+            String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(polyRecord);
 
             PreparedStatement dataStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?;");
             dataStatement.setString(1, polyRecord._id());
@@ -352,7 +345,7 @@ public class SQLitePolyStorage {
 
             while(resultSet.next()) {
                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                polyList.add(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+                polyList.add(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
             }
             return polyList;
         } catch (Exception e) {

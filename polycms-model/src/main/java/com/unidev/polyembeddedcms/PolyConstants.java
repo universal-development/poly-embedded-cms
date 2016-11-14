@@ -24,8 +24,8 @@ public class PolyConstants {
     public static final String ITEM_PER_PAGE_KEY = "item_per_page";
 
 
-    public static final String CATEGORY_POLY = "category";
-    public static final String TAGS_POLY = "tag";
+    public static final String CATEGORY_POLY = "categories";
+    public static final String TAGS_POLY = "tags";
     public static final String DATA_POLY = "data";
 
     public static ObjectMapper POLY_OBJECT_MAPPER = new ObjectMapper() {{
