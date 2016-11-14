@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.unidev.platform.common.utils.StringUtils;
 import com.unidev.polydata.domain.BasicPoly;
+import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCoreException;
 import com.unidev.polyembeddedcms.PolyQuery;
@@ -69,23 +70,7 @@ public class SQLitePolyStorage {
      * @return
      */
     public Optional<PolyRecord> fetchPoly(String id) {
-
-        PreparedStatement preparedStatement;
-        try(Connection connection = openDb()) {
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?");
-            preparedStatement.setObject(1, id);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            if (!resultSet.next()) {
-                return null;
-            }
-            String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-            PolyRecord polyRecord = OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class);
-            return Optional.of(polyRecord);
-        } catch (Exception e) {
-            LOG.warn("Failed to fetch poly {} for tenant {}", id, e);
-            return Optional.empty();
-        }
+        return fetchRawPoly(PolyConstants.DATA_POLY, id);
     }
 
     /**
@@ -94,14 +79,7 @@ public class SQLitePolyStorage {
      * @return
      */
     public boolean removePoly(String id) {
-        try(Connection connection = openDb()) {
-            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + PolyConstants.DATA_POLY + " WHERE _id = ?");
-            preparedStatement.setString(1, id);
-            return preparedStatement.executeUpdate() != 0;
-        } catch (Exception e) {
-            LOG.error("Failed to remove poly {}", id, e);
-            return false;
-        }
+        return removeRawPoly(PolyConstants.DATA_POLY, id);
     }
 
     /**
@@ -130,6 +108,11 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * Count available polys based on polyQuery
+     * @param polyQuery
+     * @return
+     */
     public long countPoly(PolyQuery polyQuery) {
         List<PolyRecord> polyList = new ArrayList<>();
 
@@ -147,6 +130,10 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * Persist poly into db
+     * @param poly
+     */
     public void persistPoly(PolyRecord poly) {
         try(Connection connection = openDb()) {
 
@@ -184,10 +171,15 @@ public class SQLitePolyStorage {
 
     // tags
 
-    public List<PolyRecord> fetchTags() {
+    /**
+     * Fetch support polys from provided table
+     * @param table
+     * @return
+     */
+    public List<PolyRecord> fetchSupportPolys(String table) {
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
-            preparedStatement = connection.prepareStatement("SELECT * FROM " + PolyConstants.TAGS_POLY + " ORDER BY count DESC");
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " ORDER BY count DESC");
             return evaluateStatement(preparedStatement);
         } catch (Exception e) {
             LOG.warn("Failed to fetch tags for tenant",e);
@@ -195,6 +187,55 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * Count available polys from support table
+     * @param table
+     * @return
+     */
+    public long fetchSupportPolysCount(String table) {
+        PreparedStatement preparedStatement;
+        try(Connection connection = openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS count FROM " + table + " ORDER BY count DESC");
+            return preparedStatement.executeQuery().getLong("count");
+        } catch (Exception e) {
+            LOG.warn("Failed to count support polys {}", table, e);
+            return 0;
+        }
+    }
+
+
+
+    /**
+     * Fetch support poly by id
+     * @return
+     */
+     public Optional<PolyRecord> fetchRawPoly(String table, String id) {
+         PreparedStatement preparedStatement;
+         try(Connection connection = openDb()) {
+             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?");
+             preparedStatement.setString(1, id);
+             ResultSet resultSet = preparedStatement.executeQuery();
+             if (resultSet.next()) {
+                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
+                 return Optional.of(OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+             }
+             return Optional.empty();
+         } catch (Exception e) {
+             LOG.warn("Failed to fetch support poly {} {}", table, id, e);
+             return Optional.empty();
+         }
+     }
+
+    public boolean removeRawPoly(String table, String id) {
+        try(Connection connection = openDb()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + table + " WHERE _id = ?");
+            preparedStatement.setString(1, id);
+            return preparedStatement.executeUpdate() != 0;
+        } catch (Exception e) {
+            LOG.error("Failed to remove poly {} {}", table, id, e);
+            return false;
+        }
+    }
 
 
     private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, Connection connection, StringBuilder query) throws SQLException {
@@ -247,5 +288,7 @@ public class SQLitePolyStorage {
             throw new PolyCoreException(e);
         }
     }
+
+
 
 }
