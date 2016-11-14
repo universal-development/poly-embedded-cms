@@ -146,7 +146,11 @@ public class SQLitePolyStorage {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + PolyConstants.DATA_POLY + "(_id, category, tags, data) VALUES(?, ?, ?, ?);");
                 preparedStatement.setString(1, poly._id());
                 preparedStatement.setString(2, poly.category());
-                preparedStatement.setString(3, String.join(",",poly.tags()));
+                if (  poly.tags() == null) {
+                    preparedStatement.setString(3, null);
+                } else {
+                    preparedStatement.setString(3, String.join(",", poly.tags()));
+                }
                 preparedStatement.setObject(4, rawJSON);
                 preparedStatement.executeUpdate();
             } else {
