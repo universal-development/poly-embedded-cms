@@ -149,4 +149,33 @@ public class PolyCoreDBTest {
 
     }
 
+    @Test
+    public void testCategoriesOperations() {
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(tenant);
+
+        for(int id=1;id<=10;id++) {
+            PolyRecord category = new PolyRecord()._id("potato"  + id).label("Potato" + id);
+            category.put("customKey", "customValue" + id);
+            sqLitePolyStorage.persistCategory(category);
+        }
+
+        assertThat(sqLitePolyStorage.countCategories(), is(10L));
+
+        Optional<PolyRecord> potato = sqLitePolyStorage.fetchCategory("potato2");
+        assertThat(potato.isPresent(), is(true));
+
+        PolyRecord potatoCategory = potato.get();
+
+        assertThat(potatoCategory._id(), is("potato2"));
+        assertThat(potatoCategory.label(), is("Potato2"));
+        assertThat(potatoCategory.get("customKey"), is("customValue2"));
+
+        assertThat(sqLitePolyStorage.removeCategory("potato2"), is(true));
+        assertThat(sqLitePolyStorage.removeCategory("potato2"), is(false));
+
+        Optional<PolyRecord> removedPotato2 = sqLitePolyStorage.fetchCategory("potato2");
+        assertThat(removedPotato2.isPresent(), is(false));
+
+    }
+
 }
