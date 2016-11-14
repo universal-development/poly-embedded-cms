@@ -6,8 +6,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.Matchers.*;
@@ -98,6 +100,52 @@ public class PolyCoreDBTest {
         emptyTagsQuery.setTag("potato");
         List<PolyRecord> emptyTagsQueryList = sqLitePolyStorage.listPoly(emptyTagsQuery);
         assertThat(emptyTagsQueryList.size(), is(0));
+
+        Optional<PolyRecord> poly5 = sqLitePolyStorage.fetchPoly("id_" + 5);
+        PolyRecord poly5Record = poly5.get();
+        poly5Record.category("updated_category");
+        poly5Record.tags(Arrays.asList("tomato", "potato"));
+        poly5Record.put("custom1", "value1");
+
+        sqLitePolyStorage.persistPoly(poly5Record);
+
+        Optional<PolyRecord> updatedPoly5 = sqLitePolyStorage.fetchPoly("id_" + 5);
+        assertThat(updatedPoly5.isPresent(), is(true));
+        PolyRecord updatedPoly5Record = updatedPoly5.get();
+
+        assertThat(updatedPoly5Record.category(), is("updated_category"));
+        assertThat(updatedPoly5Record.get("custom1"), is("value1"));
+        assertThat(updatedPoly5Record.tags(), is(Arrays.asList("tomato", "potato")));
+    }
+
+
+    @Test
+    public void testTagsOperations() {
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(tenant);
+
+        for(int id=1;id<=10;id++) {
+            PolyRecord tag = new PolyRecord()._id("potato"  + id).label("Potato" + id);
+            tag.put("customKey", "customValue" + id);
+
+            sqLitePolyStorage.persistTag(tag);
+        }
+
+        assertThat(sqLitePolyStorage.countTags(), is(10L));
+
+        Optional<PolyRecord> potato = sqLitePolyStorage.fetchTag("potato5");
+        assertThat(potato.isPresent(), is(true));
+
+        PolyRecord potatoTag = potato.get();
+
+        assertThat(potatoTag._id(), is("potato5"));
+        assertThat(potatoTag.label(), is("Potato5"));
+        assertThat(potatoTag.get("customKey"), is("customValue5"));
+
+        assertThat(sqLitePolyStorage.removeTag("potato5"), is(true));
+        assertThat(sqLitePolyStorage.removeTag("potato5"), is(false));
+
+        Optional<PolyRecord> removedPotato5 = sqLitePolyStorage.fetchTag("potato5");
+        assertThat(removedPotato5.isPresent(), is(false));
 
     }
 

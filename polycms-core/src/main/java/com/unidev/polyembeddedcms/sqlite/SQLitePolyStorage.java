@@ -179,8 +179,8 @@ public class SQLitePolyStorage {
         return fetchRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
     }
 
-    public void removeCategory(String categoryId) {
-        removeRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
+    public boolean removeCategory(String categoryId) {
+        return removeRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
     }
 
 
@@ -202,8 +202,8 @@ public class SQLitePolyStorage {
         return fetchRawPoly(PolyConstants.TAGS_POLY, tagId);
     }
 
-    public void removeTag(String tagId) {
-        removeRawPoly(PolyConstants.TAGS_POLY, tagId);
+    public boolean removeTag(String tagId) {
+        return removeRawPoly(PolyConstants.TAGS_POLY, tagId);
     }
 
     /**
@@ -282,7 +282,7 @@ public class SQLitePolyStorage {
             ResultSet dataResultSet = dataStatement.executeQuery();
 
             if (!dataResultSet.next()) {
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + table + "(_id, label,count, data) VALUES(?, ?, ?, ?, ?);");
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + table + "(_id, label,count, data) VALUES(?, ?, ?, ?);");
                 preparedStatement.setString(1, polyRecord._id());
                 preparedStatement.setString(2, polyRecord.label());
                 preparedStatement.setLong(3, 1L);
