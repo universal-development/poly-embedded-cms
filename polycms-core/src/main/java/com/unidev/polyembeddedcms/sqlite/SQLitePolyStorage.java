@@ -4,8 +4,6 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.unidev.platform.common.utils.StringUtils;
-import com.unidev.polydata.domain.BasicPoly;
-import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyConstants;
 import com.unidev.polyembeddedcms.PolyCoreException;
 import com.unidev.polyembeddedcms.PolyQuery;
@@ -170,6 +168,26 @@ public class SQLitePolyStorage {
 
 
     // tags
+
+    public List<PolyRecord> listTags() {
+        return fetchSupportPolys(PolyConstants.TAGS_POLY);
+    }
+
+    public long countTags() {
+        return fetchSupportPolysCount(PolyConstants.TAGS_POLY);
+    }
+
+    public void persistTag(PolyRecord polyRecord) {
+        persistSupportPoly(PolyConstants.TAGS_POLY, polyRecord);
+    }
+
+    public Optional<PolyRecord> fetchTag(String tagId) {
+        return fetchRawPoly(PolyConstants.TAGS_POLY, tagId);
+    }
+
+    public void removeTag(String tagId) {
+        removeRawPoly(PolyConstants.TAGS_POLY, tagId);
+    }
 
     /**
      * Fetch support polys from provided table
