@@ -2,6 +2,7 @@ package com.unidev.polyembeddedcms;
 
 import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polydata.FlatFileStorageMapper;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyStorage;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +72,12 @@ public class PolyCore {
             return;
         }
         FileUtils.deleteQuietly(tenantRoot);
+    }
+
+    public SQLitePolyStorage fetchSqliteStorage(String tenant) {
+        File tenantRoot = fetchStorageRoot(tenant);
+        File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
+        return new SQLitePolyStorage(dbFile.getAbsolutePath());
     }
 
     /**

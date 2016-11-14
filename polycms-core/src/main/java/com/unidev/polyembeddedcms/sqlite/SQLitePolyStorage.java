@@ -288,7 +288,7 @@ public class SQLitePolyStorage {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + table + "(_id, label,count, data) VALUES(?, ?, ?, ?, ?);");
                 preparedStatement.setString(1, polyRecord._id());
                 preparedStatement.setString(2, polyRecord.label());
-                preparedStatement.setLong(3, 0L);
+                preparedStatement.setLong(3, 1L);
                 preparedStatement.setObject(4, rawJSON);
                 preparedStatement.executeUpdate();
             } else {
