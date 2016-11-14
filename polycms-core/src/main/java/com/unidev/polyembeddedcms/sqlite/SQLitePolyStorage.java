@@ -166,6 +166,26 @@ public class SQLitePolyStorage {
     // categories
 
 
+    public List<PolyRecord> listCategories() {
+        return fetchSupportPolys(PolyConstants.CATEGORY_POLY);
+    }
+
+    public long countCategories() {
+        return fetchSupportPolysCount(PolyConstants.CATEGORY_POLY);
+    }
+
+    public void persistCategory(PolyRecord polyRecord) {
+        persistSupportPoly(PolyConstants.CATEGORY_POLY, polyRecord);
+    }
+
+    public Optional<PolyRecord> fetchCategory(String categoryId) {
+        return fetchRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
+    }
+
+    public void removeCategory(String categoryId) {
+        removeRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
+    }
+
 
     // tags
 
