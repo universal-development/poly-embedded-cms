@@ -6,6 +6,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.MatcherAssert.*;
@@ -51,6 +52,44 @@ public class PolyCoreDBTest {
 
         PolyRecord firstRecord = listPoly.get(0);
         assertThat(firstRecord._id(), is("potato"));
+
+    }
+
+    @Test
+    public void testDataListing() {
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(tenant);
+
+        for(int id = 1;id<=10;id++) {
+            PolyRecord polyRecord = new PolyRecord();
+            polyRecord._id("id_" + id);
+            polyRecord.category("category_"  + (id % 2 == 0));
+            polyRecord.tags(Arrays.asList("tag_" + id));
+
+            sqLitePolyStorage.persistPoly(polyRecord);
+        }
+
+        long count = sqLitePolyStorage.countPoly(new PolyQuery());
+        assertThat(count, is(10L));
+
+        PolyQuery categoryQuery = new PolyQuery();
+        categoryQuery.setCategory("category_false");
+        List<PolyRecord> list = sqLitePolyStorage.listPoly(categoryQuery);
+        assertThat(list.size(), is(5));
+
+        PolyQuery notExistingCategoryQuery = new PolyQuery();
+        notExistingCategoryQuery.setCategory("tomato_category");
+        List<PolyRecord> emptyList = sqLitePolyStorage.listPoly(notExistingCategoryQuery);
+        assertThat(emptyList.size(), is(0));
+
+        PolyQuery tagsQuery = new PolyQuery();
+        tagsQuery.setTag("tag_10");
+        List<PolyRecord> listByTag = sqLitePolyStorage.listPoly(tagsQuery);
+        assertThat(listByTag.size(), is(1));
+
+        PolyQuery emptyTagsQuery = new PolyQuery();
+        emptyTagsQuery.setTag("potato");
+        List<PolyRecord> emptyTagsQueryList = sqLitePolyStorage.listPoly(emptyTagsQuery);
+        assertThat(emptyTagsQueryList.size(), is(0));
 
     }
 
