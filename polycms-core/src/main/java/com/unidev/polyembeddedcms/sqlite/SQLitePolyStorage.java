@@ -237,6 +237,36 @@ public class SQLitePolyStorage {
         }
     }
 
+    public void persistSupportPoly(String table, PolyRecord polyRecord) {
+        try(Connection connection = openDb()) {
+
+            String rawJSON = OBJECT_MAPPER.writeValueAsString(polyRecord);
+
+            PreparedStatement dataStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?;");
+            dataStatement.setString(1, polyRecord._id());
+            ResultSet dataResultSet = dataStatement.executeQuery();
+
+            if (!dataResultSet.next()) {
+                PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + table + "(_id, label,count, data) VALUES(?, ?, ?, ?, ?);");
+                preparedStatement.setString(1, polyRecord._id());
+                preparedStatement.setString(2, polyRecord.label());
+                preparedStatement.setLong(3, 0L);
+                preparedStatement.setObject(4, rawJSON);
+                preparedStatement.executeUpdate();
+            } else {
+                PreparedStatement preparedStatement = connection.prepareStatement("UPDATE " + table + " SET _id = ?, label =?, count = count + 1, data =? WHERE id=?;");
+                preparedStatement.setString(1, polyRecord._id());
+                preparedStatement.setString(2, polyRecord.label());
+                preparedStatement.setObject(3, rawJSON);
+                preparedStatement.setObject(4, dataResultSet.getObject("id"));
+                preparedStatement.executeUpdate();
+            }
+        } catch (Exception e) {
+            LOG.error("Failed to import poly {} {}", table, polyRecord, e);
+        }
+
+    }
+
 
     private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, Connection connection, StringBuilder query) throws SQLException {
         Integer id = 1;
