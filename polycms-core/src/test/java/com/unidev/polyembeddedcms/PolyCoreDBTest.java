@@ -130,6 +130,7 @@ public class PolyCoreDBTest {
         }
 
         assertThat(sqLitePolyStorage.countTags(), is(10L));
+        assertThat(sqLitePolyStorage.listTags().size(), is(10));
 
         Optional<PolyRecord> potato = sqLitePolyStorage.fetchTag("potato5");
         assertThat(potato.isPresent(), is(true));
@@ -159,6 +160,7 @@ public class PolyCoreDBTest {
         }
 
         assertThat(sqLitePolyStorage.countCategories(), is(10L));
+        assertThat(sqLitePolyStorage.listCategories().size(), is(10));
 
         Optional<PolyRecord> potato = sqLitePolyStorage.fetchCategory("potato2");
         assertThat(potato.isPresent(), is(true));
