@@ -1,7 +1,9 @@
-CREATE TABLE data (
+CREATE TABLE categories (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   _id TEXT,
+  label VARCHAR(255),
+  count INTEGER,
   data JSON
 );
 
-CREATE INDEX _id_idx ON data (_id);
+CREATE INDEX categories_id_idx ON categories (_id);
