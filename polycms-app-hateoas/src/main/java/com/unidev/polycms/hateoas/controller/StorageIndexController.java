@@ -33,8 +33,8 @@ public class StorageIndexController {
         HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
 
         hateoasPolyIndex.add(
-                linkTo(StorageIndexController.class).slash("categories").withSelfRel(),
-                linkTo(StorageIndexController.class).slash("tags").withSelfRel()
+                linkTo(StorageIndexController.class).slash("categories").withRel("categories"),
+                linkTo(StorageIndexController.class).slash("tags").withRel("tags")
         );
 
         return hateoasPolyIndex;
