@@ -1,5 +1,7 @@
 package com.unidev.polycms.hateoas;
 
+import com.unidev.polycms.hateoas.vo.HateoasPoly;
+import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
 import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
@@ -16,8 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.stream.LongStream;
 
-import static com.unidev.polycms.hateoas.HateoasPoly.hateoasPoly;
-import static com.unidev.polycms.hateoas.HateoasPolyIndex.*;
+import static com.unidev.polycms.hateoas.vo.HateoasPoly.hateoasPoly;
+import static com.unidev.polycms.hateoas.vo.HateoasPolyIndex.*;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.*;
 
 /**

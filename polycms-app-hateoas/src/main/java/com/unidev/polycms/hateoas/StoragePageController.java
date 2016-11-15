@@ -1,5 +1,6 @@
 package com.unidev.polycms.hateoas;
 
+import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.sqlite.SQLitePolyService;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import static com.unidev.polycms.hateoas.HateoasPoly.hateoasPoly;
+import static com.unidev.polycms.hateoas.vo.HateoasPoly.hateoasPoly;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 @RestController

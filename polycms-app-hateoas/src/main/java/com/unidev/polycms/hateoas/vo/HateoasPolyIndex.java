@@ -1,4 +1,4 @@
-package com.unidev.polycms.hateoas;
+package com.unidev.polycms.hateoas.vo;
 
 
 import org.springframework.hateoas.ResourceSupport;

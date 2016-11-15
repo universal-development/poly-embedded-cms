@@ -1,7 +1,6 @@
-package com.unidev.polycms.hateoas;
+package com.unidev.polycms.hateoas.vo;
 
 
-import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polydata.domain.Poly;
 import com.unidev.polyembeddedcms.PolyRecord;
 import org.springframework.hateoas.ResourceSupport;
