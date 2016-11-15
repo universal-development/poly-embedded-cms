@@ -49,8 +49,7 @@ dependencies {
 	compile "com.unidev.platform:unidev-spring-common:$unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-j2ee-common:$unidevPlatformVersion"
 	compile "com.unidev.platform:unidev-utils:$unidevPlatformVersion"
-
-	compile "com.unidev.platform:unidev-j2ee-common:$unidevPlatformVersion"
+	compile "com.unidev.platform:unidev-dto:$unidevPlatformVersion"
 
 	compile 'org.jminix:jminix:1.2.0'
 	compile "net.logstash.logback:logstash-logback-encoder:4.6"

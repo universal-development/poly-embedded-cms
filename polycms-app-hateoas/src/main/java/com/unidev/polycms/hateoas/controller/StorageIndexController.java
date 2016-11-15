@@ -27,8 +27,8 @@ public class StorageIndexController {
     @GetMapping(value = "/storage/{storage}", produces= MediaType.APPLICATION_JSON_VALUE)
     public ResourceSupport index(@PathVariable("storage") String storage) {
         if (!polyCore.existTenant(storage)) {
-            ResourceSupport notExistingResponse = new ResourceSupport();
-            return notExistingResponse;
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
         }
         HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
         return hateoasPolyIndex;
