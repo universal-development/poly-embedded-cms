@@ -1,23 +1,16 @@
-package com.unidev.polycms.hateoas;
+package com.unidev.polycms.hateoas.controller;
 
-import com.unidev.polycms.hateoas.vo.HateoasPoly;
 import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
-import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
-import com.unidev.polyembeddedcms.PolyQuery;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.hateoas.Link;
+import org.springframework.hateoas.ResourceSupport;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.stream.LongStream;
-
-import static com.unidev.polycms.hateoas.vo.HateoasPoly.hateoasPoly;
-import static com.unidev.polycms.hateoas.vo.HateoasPolyIndex.hateoasPolyIndex;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
@@ -32,9 +25,14 @@ public class StorageIndexController {
     private PolyCore polyCore;
 
     @GetMapping(value = "/storage/{storage}", produces= MediaType.APPLICATION_JSON_VALUE)
-    public HateoasPolyIndex index(@PathVariable("storage") String storage) {
-
-        PolyQuery polyQuery = PolyQuery.query();
+    public ResourceSupport index(@PathVariable("storage") String storage) {
+        if (!polyCore.existTenant(storage)) {
+            ResourceSupport notExistingResponse = new ResourceSupport();
+            return notExistingResponse;
+        }
+        HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
+        return hateoasPolyIndex;
+        //PolyQuery polyQuery = PolyQuery.query();
 
 //        Long totalPolys = sqLitePolyService.countPoly(polyQuery, storage);
 //
@@ -50,7 +48,7 @@ public class StorageIndexController {
 //            index.add(hateoasPoly);
 //        });
 
-        return null;
+        //return null;
     }
 
 }

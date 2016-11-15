@@ -1,4 +1,4 @@
-package com.unidev.polycms.hateoas;
+package com.unidev.polycms.hateoas.controller;
 
 import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
 import com.unidev.polyembeddedcms.PolyCore;
