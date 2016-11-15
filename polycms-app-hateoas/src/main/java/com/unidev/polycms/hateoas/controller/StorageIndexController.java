@@ -33,28 +33,11 @@ public class StorageIndexController {
         HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
 
         hateoasPolyIndex.add(
-                linkTo(StorageIndexController.class).slash("categories").withRel("categories"),
-                linkTo(StorageIndexController.class).slash("tags").withRel("tags")
+                linkTo(StorageIndexController.class).slash(storage).slash("categories").withRel("categories"),
+                linkTo(StorageIndexController.class).slash(storage).slash("tags").withRel("tags")
         );
 
         return hateoasPolyIndex;
-        //PolyQuery polyQuery = PolyQuery.query();
-
-//        Long totalPolys = sqLitePolyService.countPoly(polyQuery, storage);
-//
-//        Long pages = totalPolys / PolyQuery.DEFAULT_ITEM_PER_PAGE;
-//
-//        HateoasPolyIndex index = hateoasPolyIndex();
-//
-//        LongStream.range(1, pages+1).forEach( page -> {
-//            BasicPoly pageRecord  = new BasicPoly()._id(page + "");
-//            HateoasPoly hateoasPoly = hateoasPoly(pageRecord);
-//            Link link = linkTo(StoragePageController.class).slash("storage").slash(storage).slash("page").slash(page).withSelfRel();
-//            hateoasPoly.add(link);
-//            index.add(hateoasPoly);
-//        });
-
-        //return null;
     }
 
 }
