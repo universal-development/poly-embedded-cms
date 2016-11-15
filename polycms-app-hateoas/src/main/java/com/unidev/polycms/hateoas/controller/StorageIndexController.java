@@ -31,6 +31,12 @@ public class StorageIndexController {
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
         HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
+
+        hateoasPolyIndex.add(
+                linkTo(StorageIndexController.class).slash("categories").withSelfRel(),
+                linkTo(StorageIndexController.class).slash("tags").withSelfRel()
+        );
+
         return hateoasPolyIndex;
         //PolyQuery polyQuery = PolyQuery.query();
 

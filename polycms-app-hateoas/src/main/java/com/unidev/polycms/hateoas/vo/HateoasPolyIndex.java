@@ -2,6 +2,7 @@ package com.unidev.polycms.hateoas.vo;
 
 
 import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,4 +49,6 @@ public class HateoasPolyIndex extends ResourceSupport {
     public void setList(List<HateoasPoly> list) {
         this.list = list;
     }
+
+
 }
