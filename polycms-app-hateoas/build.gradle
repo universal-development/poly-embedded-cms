@@ -1,6 +1,6 @@
 buildscript {
 	ext {
-		springBootVersion = '1.4.0.RELEASE'
+		springBootVersion = '1.4.2.RELEASE'
 	}
 	repositories {
 		mavenCentral()
@@ -11,6 +11,7 @@ buildscript {
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
 		classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
+		classpath 'org.springframework:springloaded:1.2.0.RELEASE'
 	}
 }
 
@@ -39,6 +40,14 @@ bootRun {
 repositories {
 	mavenCentral()
 }
+
+idea {
+	module {
+		inheritOutputDirs = false
+		outputDir = file("$buildDir/classes/main/")
+	}
+}
+
 def unidevPlatformVersion = "2.0.0"
 
 
