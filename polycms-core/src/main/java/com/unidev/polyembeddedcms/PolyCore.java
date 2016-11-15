@@ -7,6 +7,8 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static com.unidev.polydata.FlatFileStorageMapper.storageMapper;
+
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
@@ -74,10 +76,40 @@ public class PolyCore {
         FileUtils.deleteQuietly(tenantRoot);
     }
 
+    /**
+     * Fetch sqlite storage
+     * @param tenant
+     * @return
+     */
     public SQLitePolyStorage fetchSqliteStorage(String tenant) {
         File tenantRoot = fetchStorageRoot(tenant);
         File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
         return new SQLitePolyStorage(dbFile.getAbsolutePath());
+    }
+
+    /**
+     * Fetch flat file storage
+     * @param tenant
+     * @return
+     */
+    public FlatFileStorage fetchFlatFileStorage(String tenant) {
+        File tenantRoot = fetchStorageRoot(tenant);
+        File flatFileDB = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
+        if (!flatFileDB.exists()) {
+            return new FlatFileStorage();
+        }
+        return storageMapper().loadSource(flatFileDB).load();
+    }
+
+    /**
+     * Persist flat file storage
+     * @param tenant
+     * @param flatfileStorage
+     */
+    public void persistFlatFileStorage(String tenant, FlatFileStorage flatfileStorage) {
+        File tenantRoot = fetchStorageRoot(tenant);
+        File flatFileDB = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
+        storageMapper().saveSource(flatFileDB).save(flatfileStorage);
     }
 
     /**
