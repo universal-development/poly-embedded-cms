@@ -38,7 +38,8 @@ public class StorageIndexController {
 
         hateoasPolyIndex.add(
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("categories").withRel("categories"),
-                linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("tags").withRel("tags")
+                linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("tags").withRel("tags"),
+                linkTo(StorageQueryController.class).slash("storage").slash(storage).slash("query").withRel("query")
         );
         hateoasPolyIndex.data(storage);
         return hateoasPolyIndex;
