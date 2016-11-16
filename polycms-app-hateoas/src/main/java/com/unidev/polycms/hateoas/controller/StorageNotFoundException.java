@@ -22,6 +22,10 @@ import com.unidev.platform.common.exception.CommonRuntimeException;
  */
 public class StorageNotFoundException extends CommonRuntimeException {
 
+    public StorageNotFoundException() {
+        super("Not found");
+    }
+
     public StorageNotFoundException(String message) {
         super(message);
     }
