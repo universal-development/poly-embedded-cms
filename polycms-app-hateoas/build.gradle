@@ -16,7 +16,7 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'eclipse'
-apply plugin: 'spring-boot'
+apply plugin: 'org.springframework.boot'
 apply plugin: "com.gorylenko.gradle-git-properties"
 
 jar {
