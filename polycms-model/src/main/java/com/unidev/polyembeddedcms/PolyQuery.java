@@ -5,13 +5,11 @@ package com.unidev.polyembeddedcms;
  */
 public class PolyQuery {
 
-    public static final Long DEFAULT_ITEM_PER_PAGE = 30L;
-
     private String tag;
     private String category;
     private Long page = 0L;
 
-    private Long itemPerPage = DEFAULT_ITEM_PER_PAGE;
+    private Long itemPerPage = PolyConstants.DEFAULT_ITEM_PER_PAGE;
 
     public PolyQuery() {}
 

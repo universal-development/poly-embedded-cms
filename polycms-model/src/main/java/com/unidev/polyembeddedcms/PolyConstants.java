@@ -22,7 +22,7 @@ public class PolyConstants {
     public static final String COUNT_KEY = "count";
 
     public static final String ITEM_PER_PAGE_KEY = "item_per_page";
-
+    public static final Long DEFAULT_ITEM_PER_PAGE = 30L;
 
     public static final String CATEGORY_POLY = "categories";
     public static final String TAGS_POLY = "tags";
