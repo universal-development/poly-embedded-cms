@@ -16,6 +16,7 @@
 package com.unidev.polycms.hateoas.vo;
 
 
+import com.unidev.ProjectnameApplication;
 import org.springframework.hateoas.ResourceSupport;
 
 /**
@@ -24,6 +25,7 @@ import org.springframework.hateoas.ResourceSupport;
  */
 public class HateoasResponse<T> extends ResourceSupport {
 
+    String version = ProjectnameApplication.VERSION;
     T data;
 
     public static HateoasResponse hateoasResponse() {
@@ -37,6 +39,14 @@ public class HateoasResponse<T> extends ResourceSupport {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 
     public HateoasResponse data(T data) {
