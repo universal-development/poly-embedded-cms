@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.unidev.polycms.hateoas.vo.HateoasResponse.hateoasResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 /**
@@ -45,7 +46,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        HateoasResponse hateoasPolyIndex = new HateoasResponse();
+        HateoasResponse hateoasPolyIndex = hateoasResponse();
 
         hateoasPolyIndex.add(
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("categories").withRel("categories"),
@@ -62,7 +63,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        return new HateoasResponse().data(polyCore.fetchSqliteStorage(storage).listCategories());
+        return hateoasResponse().data(polyCore.fetchSqliteStorage(storage).listCategories());
     }
 
     @GetMapping(value = "/storage/{storage}/tags", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -71,7 +72,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        return new HateoasResponse().data(polyCore.fetchSqliteStorage(storage).listTags());
+        return hateoasResponse().data(polyCore.fetchSqliteStorage(storage).listTags());
     }
 
 }
