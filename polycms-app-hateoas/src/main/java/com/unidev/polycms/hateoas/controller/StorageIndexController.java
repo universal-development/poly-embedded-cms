@@ -1,9 +1,7 @@
 package com.unidev.polycms.hateoas.controller;
 
-import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
-import com.unidev.polydata.domain.Poly;
+import com.unidev.polycms.hateoas.vo.HateoasResponse;
 import com.unidev.polyembeddedcms.PolyCore;
-import com.unidev.polyembeddedcms.PolyRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
@@ -34,7 +30,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
+        HateoasResponse hateoasPolyIndex = new HateoasResponse();
 
         hateoasPolyIndex.add(
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("categories").withRel("categories"),
@@ -51,7 +47,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        return new HateoasPolyIndex().data(polyCore.fetchSqliteStorage(storage).listCategories());
+        return new HateoasResponse().data(polyCore.fetchSqliteStorage(storage).listCategories());
     }
 
     @GetMapping(value = "/storage/{storage}/tags", produces= MediaType.APPLICATION_JSON_VALUE)
@@ -60,7 +56,7 @@ public class StorageIndexController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
-        return new HateoasPolyIndex().data(polyCore.fetchSqliteStorage(storage).listTags());
+        return new HateoasResponse().data(polyCore.fetchSqliteStorage(storage).listTags());
     }
 
 }

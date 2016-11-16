@@ -1,6 +1,6 @@
 package com.unidev.polycms.hateoas.controller;
 
-import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
+import com.unidev.polycms.hateoas.vo.HateoasResponse;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
 import com.unidev.polyembeddedcms.PolyRecord;
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static com.unidev.polycms.hateoas.vo.HateoasPolyIndex.hateoasPolyIndex;
+import static com.unidev.polycms.hateoas.vo.HateoasResponse.hateoasResponse;
 
 @RestController
 public class StorageQueryController {
@@ -24,24 +24,24 @@ public class StorageQueryController {
     private PolyCore polyCore;
 
     @PostMapping(value = "/storage/{storage}/query", produces= MediaType.APPLICATION_JSON_VALUE)
-    public HateoasPolyIndex query(@PathVariable("storage") String storage, @RequestBody PolyQuery polyQuery) {
+    public HateoasResponse query(@PathVariable("storage") String storage, @RequestBody PolyQuery polyQuery) {
         if (!polyCore.existTenant(storage)) {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
         SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
         List<PolyRecord> polyRecords = sqLitePolyStorage.listPoly(polyQuery);
-        return hateoasPolyIndex().data(polyRecords);
+        return hateoasResponse().data(polyRecords);
     }
 
     @GetMapping(value = "/storage/{storage}/poly/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
-    public HateoasPolyIndex fetchPoly(@PathVariable("storage") String storage, @PathVariable("id") String id) {
+    public HateoasResponse fetchPoly(@PathVariable("storage") String storage, @PathVariable("id") String id) {
         if (!polyCore.existTenant(storage)) {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
         SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
-        return hateoasPolyIndex().data(sqLitePolyStorage.fetchPoly(id));
+        return hateoasResponse().data(sqLitePolyStorage.fetchPoly(id));
     }
 
 }

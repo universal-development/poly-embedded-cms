@@ -3,12 +3,12 @@ package com.unidev.polycms.hateoas.vo;
 
 import org.springframework.hateoas.ResourceSupport;
 
-public class HateoasPolyIndex<T> extends ResourceSupport {
+public class HateoasResponse<T> extends ResourceSupport {
 
     T data;
 
-    public static HateoasPolyIndex hateoasPolyIndex() {
-        return new HateoasPolyIndex();
+    public static HateoasResponse hateoasResponse() {
+        return new HateoasResponse();
     }
 
 
@@ -20,7 +20,7 @@ public class HateoasPolyIndex<T> extends ResourceSupport {
         this.data = data;
     }
 
-    public HateoasPolyIndex data(T data) {
+    public HateoasResponse data(T data) {
         this.data = data;
         return this;
     }
