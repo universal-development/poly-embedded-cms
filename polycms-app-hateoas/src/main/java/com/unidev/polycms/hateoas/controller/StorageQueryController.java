@@ -3,14 +3,17 @@ package com.unidev.polycms.hateoas.controller;
 import com.unidev.polycms.hateoas.vo.HateoasPolyIndex;
 import com.unidev.polyembeddedcms.PolyCore;
 import com.unidev.polyembeddedcms.PolyQuery;
+import com.unidev.polyembeddedcms.PolyRecord;
+import com.unidev.polyembeddedcms.sqlite.SQLitePolyStorage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+import static com.unidev.polycms.hateoas.vo.HateoasPolyIndex.hateoasPolyIndex;
 
 @RestController
 public class StorageQueryController {
@@ -20,15 +23,25 @@ public class StorageQueryController {
     @Autowired
     private PolyCore polyCore;
 
-    @GetMapping(value = "/storage/{storage}/query", produces= MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/storage/{storage}/query", produces= MediaType.APPLICATION_JSON_VALUE)
     public HateoasPolyIndex query(@PathVariable("storage") String storage, @RequestBody PolyQuery polyQuery) {
-//        PolyQuery polyQuery = PolyQuery.query().page(page);
-//        HateoasPolyIndex hateoasPolyIndex = new HateoasPolyIndex();
-//        sqLitePolyService.listNewPoly(polyQuery, storage).forEach( poly -> {
-//            hateoasPolyIndex.add(hateoasPoly(poly));
-//        });
-        //return hateoasPolyIndex;
-        return null;
+        if (!polyCore.existTenant(storage)) {
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
+        }
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
+        List<PolyRecord> polyRecords = sqLitePolyStorage.listPoly(polyQuery);
+        return hateoasPolyIndex().data(polyRecords);
+    }
+
+    @GetMapping(value = "/storage/{storage}/poly/{id}", produces= MediaType.APPLICATION_JSON_VALUE)
+    public HateoasPolyIndex fetchPoly(@PathVariable("storage") String storage, @PathVariable("id") String id) {
+        if (!polyCore.existTenant(storage)) {
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
+        }
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
+        return hateoasPolyIndex().data(sqLitePolyStorage.fetchPoly(id));
     }
 
 }
