@@ -17,6 +17,8 @@ package com.unidev.polycms.hateoas.controller;
 
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,6 +32,20 @@ import com.unidev.platform.common.dto.response.Response;
  */
 @ControllerAdvice
 public class ControllerErrorHandler {
+
+    private static Logger LOG = LoggerFactory.getLogger(ControllerErrorHandler.class);
+
+
+    @ExceptionHandler(Throwable.class)
+    @ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+    @ResponseBody
+    public Response serviceError(HttpServletRequest req, Throwable e) {
+        LOG.error("Error in handling request {}", req, e);
+        Response<String, String> response = new Response<>();
+        response.setPayload("Service error");
+        response.setStatus("service-error");
+        return response;
+    }
 
     @ExceptionHandler(StorageNotFoundException.class)
     @ResponseStatus(value = HttpStatus.NOT_FOUND)
