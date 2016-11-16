@@ -105,8 +105,6 @@ public class SQLitePolyStorage {
      * @return
      */
     public long countPoly(PolyQuery polyQuery) {
-        List<PolyRecord> polyList = new ArrayList<>();
-
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
             StringBuilder query = new StringBuilder("SELECT COUNT(*) as count FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
@@ -215,7 +213,7 @@ public class SQLitePolyStorage {
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " ORDER BY count DESC");
-            return evaluateStatement(preparedStatement);
+            return evaluateSupportStatement(preparedStatement);
         } catch (Exception e) {
             LOG.warn("Failed to fetch tags for tenant",e);
             return Collections.EMPTY_LIST;
@@ -354,6 +352,24 @@ public class SQLitePolyStorage {
         }
     }
 
+    private List<PolyRecord> evaluateSupportStatement(PreparedStatement preparedStatement) throws PolyCoreException {
+
+        List<PolyRecord> polyList = new ArrayList<>();
+        try {
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            while(resultSet.next()) {
+                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
+                PolyRecord polyRecord = POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class);
+                polyRecord.count(resultSet.getObject("count"));
+                polyList.add(polyRecord);
+            }
+            return polyList;
+        } catch (Exception e) {
+            LOG.warn("Failed to evaluate statement", e);
+            throw new PolyCoreException(e);
+        }
+    }
 
 
 }
