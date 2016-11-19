@@ -93,4 +93,15 @@ public class PolyQuery {
     public void setItemPerPage(Long itemPerPage) {
         this.itemPerPage = itemPerPage;
     }
+
+    @Override
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("PolyQuery{");
+        sb.append("tag='").append(tag).append('\'');
+        sb.append(", category='").append(category).append('\'');
+        sb.append(", page=").append(page);
+        sb.append(", itemPerPage=").append(itemPerPage);
+        sb.append('}');
+        return sb.toString();
+    }
 }
