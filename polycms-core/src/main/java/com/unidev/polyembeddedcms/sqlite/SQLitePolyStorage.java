@@ -333,7 +333,7 @@ public class SQLitePolyStorage {
         if (listNewPolyQuery.getItemPerPage() != null ) {
             query.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
             params.put(id++, listNewPolyQuery.getItemPerPage());
-            params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage() - 1));
+            params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage() ));
         }
 
         preparedStatement = connection.prepareStatement(query.toString());
