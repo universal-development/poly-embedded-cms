@@ -99,7 +99,7 @@ public class SQLitePolyStorage {
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
             StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
-            preparedStatement = buildPolyQuery(polyQuery, connection, query);
+            preparedStatement = buildPolyQuery(polyQuery, true, connection, query);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             while(resultSet.next()) {
@@ -123,8 +123,7 @@ public class SQLitePolyStorage {
         PreparedStatement preparedStatement;
         try(Connection connection = openDb()) {
             StringBuilder query = new StringBuilder("SELECT COUNT(*) as count FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
-            polyQuery.itemPerPage(null).page(null);
-            preparedStatement = buildPolyQuery(polyQuery, connection, query);
+            preparedStatement = buildPolyQuery(polyQuery, false, connection, query);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.getLong("count");
@@ -316,7 +315,7 @@ public class SQLitePolyStorage {
     }
 
 
-    private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, Connection connection, StringBuilder query) throws SQLException {
+    private PreparedStatement buildPolyQuery(PolyQuery listNewPolyQuery, boolean includePagination, Connection connection, StringBuilder query) throws SQLException {
         Integer id = 1;
         Map<Integer, Object> params = new HashMap<>();
         PreparedStatement preparedStatement;
@@ -330,10 +329,12 @@ public class SQLitePolyStorage {
             params.put(id++, "%" + listNewPolyQuery.getTag() + "%" );
         }
 
-        if (listNewPolyQuery.getItemPerPage() != null ) {
-            query.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
-            params.put(id++, listNewPolyQuery.getItemPerPage());
-            params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage() ));
+        if (includePagination) {
+            if (listNewPolyQuery.getItemPerPage() != null) {
+                query.append(" ORDER BY id DESC LIMIT ? OFFSET ?");
+                params.put(id++, listNewPolyQuery.getItemPerPage());
+                params.put(id++, listNewPolyQuery.getItemPerPage() * (listNewPolyQuery.getPage()));
+            }
         }
 
         preparedStatement = connection.prepareStatement(query.toString());
