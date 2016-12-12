@@ -5,15 +5,13 @@ Service for management of polydata records stored in different poly stores: flat
 Modules
 =======
 
-Current version: 0.0.1-S
+Current version: 0.1.1-SNAPSHOT
 
 ```
 polycms-app-hateoas - hateoas based API 
 polycms-app-web - web pages renderer 
-```
-
-```
-polycms-migrators  - common used db migrators for template storages
+polycms-core - services for accessing poly records
+polycms-model - model objects
 ```
 
 License
