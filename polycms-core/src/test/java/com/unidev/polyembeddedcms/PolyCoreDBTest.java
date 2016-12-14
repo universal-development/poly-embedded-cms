@@ -15,6 +15,7 @@
  */
 package com.unidev.polyembeddedcms;
 
+import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polyembeddedcms.sqlite.SQLitePolyStorage;
 import org.junit.Before;
 import org.junit.Rule;
@@ -46,6 +47,24 @@ public class PolyCoreDBTest {
 
         SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(tenant);
         sqLitePolyStorage.migrateStorage();
+    }
+
+    @Test
+    public void testFlatFileStorageFetching() {
+        FlatFileStorage flatFileStorage = polyCore.fetchFlatFileStorage(tenant);
+        assertThat(flatFileStorage, is(not(nullValue())));
+        assertThat(flatFileStorage.size(), is(not(0)));
+
+        assertThat(flatFileStorage.metadata(), is(not(nullValue())));
+        assertThat(flatFileStorage.metadata().get("tenant"),  is(tenant));
+
+        flatFileStorage.metadata().put("tomato", "potato");
+
+        polyCore.persistFlatFileStorage(tenant, flatFileStorage);
+
+
+        FlatFileStorage secondStorage = polyCore.fetchFlatFileStorage(tenant);
+        assertThat(secondStorage.metadata().get("tomato"), is("potato"));
     }
 
     @Test
