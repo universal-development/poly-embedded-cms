@@ -75,7 +75,7 @@ public class PolyCore {
         tenantRoot.mkdirs();
         FlatFileStorage flatFileStorage = new FlatFileStorage();
         flatFileStorage.metadata().put("tenant", tenantName);
-        FlatFileStorageMapper.storageMapper().saveSource(new File(tenantRoot, PolyConstants.INDEX_FILE)).save(flatFileStorage);
+        FlatFileStorageMapper.storageMapper().saveSource(new File(tenantRoot, PolyConstants.FLAT_FILE_DB)).save(flatFileStorage);
     }
 
     /**
