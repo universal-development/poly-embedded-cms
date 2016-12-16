@@ -58,7 +58,7 @@ public class PolyQuery {
     }
 
     public <T extends PolyQuery> T itemPerPage(Long itemPerPage) {
-        this.itemPerPage = itemPerPage;
+        setItemPerPage(itemPerPage);
         return (T) this;
     }
 
@@ -103,5 +103,28 @@ public class PolyQuery {
         sb.append(", itemPerPage=").append(itemPerPage);
         sb.append('}');
         return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PolyQuery polyQuery = (PolyQuery) o;
+
+        if (tag != null ? !tag.equals(polyQuery.tag) : polyQuery.tag != null) return false;
+        if (category != null ? !category.equals(polyQuery.category) : polyQuery.category != null) return false;
+        if (page != null ? !page.equals(polyQuery.page) : polyQuery.page != null) return false;
+        return itemPerPage != null ? itemPerPage.equals(polyQuery.itemPerPage) : polyQuery.itemPerPage == null;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = tag != null ? tag.hashCode() : 0;
+        result = 31 * result + (category != null ? category.hashCode() : 0);
+        result = 31 * result + (page != null ? page.hashCode() : 0);
+        result = 31 * result + (itemPerPage != null ? itemPerPage.hashCode() : 0);
+        return result;
     }
 }
