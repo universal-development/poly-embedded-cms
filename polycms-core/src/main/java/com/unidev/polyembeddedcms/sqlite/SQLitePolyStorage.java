@@ -387,5 +387,7 @@ public class SQLitePolyStorage {
         }
     }
 
-
+    public String getDbFile() {
+        return dbFile;
+    }
 }
