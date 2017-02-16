@@ -109,7 +109,7 @@ public class SQLitePolyStorage {
 
             return polyList;
         } catch (Exception e) {
-            LOG.warn("Failed to fetch polys", e);
+            LOG.warn("Failed to fetch polys {}", dbFile, e);
             return Collections.EMPTY_LIST;
         }
     }
@@ -128,7 +128,7 @@ public class SQLitePolyStorage {
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.getLong("count");
         } catch (Exception e) {
-            LOG.warn("Failed to fetch polys", e);
+            LOG.warn("Failed to fetch polys {}",dbFile, e);
             return 0;
         }
     }
@@ -168,7 +168,7 @@ public class SQLitePolyStorage {
                 preparedStatement.executeUpdate();
             }
         } catch (Exception e) {
-            LOG.error("Failed to import poly {}", poly, e);
+            LOG.error("Failed to import poly {} {}", poly, dbFile, e);
         }
     }
 
@@ -229,7 +229,7 @@ public class SQLitePolyStorage {
             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " ORDER BY count DESC");
             return evaluateSupportStatement(preparedStatement);
         } catch (Exception e) {
-            LOG.warn("Failed to fetch tags for tenant",e);
+            LOG.warn("Failed to fetch tags for tenant {} {}", table, dbFile, e);
             return Collections.EMPTY_LIST;
         }
     }
@@ -245,7 +245,7 @@ public class SQLitePolyStorage {
             preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS count FROM " + table + " ORDER BY count DESC");
             return preparedStatement.executeQuery().getLong("count");
         } catch (Exception e) {
-            LOG.warn("Failed to count support polys {}", table, e);
+            LOG.warn("Failed to count support polys {} {}", table, dbFile, e);
             return 0;
         }
     }
@@ -268,7 +268,7 @@ public class SQLitePolyStorage {
              }
              return Optional.empty();
          } catch (Exception e) {
-             LOG.warn("Failed to fetch support poly {} {}", table, id, e);
+             LOG.warn("Failed to fetch support poly {} {} {}", table, id, dbFile, e);
              return Optional.empty();
          }
      }
@@ -279,7 +279,7 @@ public class SQLitePolyStorage {
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() != 0;
         } catch (Exception e) {
-            LOG.error("Failed to remove poly {} {}", table, id, e);
+            LOG.error("Failed to remove poly {} {} {}", table, id, dbFile, e);
             return false;
         }
     }
@@ -309,7 +309,7 @@ public class SQLitePolyStorage {
                 preparedStatement.executeUpdate();
             }
         } catch (Exception e) {
-            LOG.error("Failed to import poly {} {}", table, polyRecord, e);
+            LOG.error("Failed to import poly {} {} {}", table, polyRecord, dbFile, e);
         }
 
     }
@@ -363,7 +363,7 @@ public class SQLitePolyStorage {
             }
             return polyList;
         } catch (Exception e) {
-            LOG.warn("Failed to evaluate statement", e);
+            LOG.warn("Failed to evaluate statement {}", dbFile, e);
             throw new PolyCoreException(e);
         }
     }
@@ -382,7 +382,7 @@ public class SQLitePolyStorage {
             }
             return polyList;
         } catch (Exception e) {
-            LOG.warn("Failed to evaluate statement", e);
+            LOG.warn("Failed to evaluate statement {}", dbFile, e);
             throw new PolyCoreException(e);
         }
     }
