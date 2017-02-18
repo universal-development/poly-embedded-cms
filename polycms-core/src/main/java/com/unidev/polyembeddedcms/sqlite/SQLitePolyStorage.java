@@ -168,6 +168,18 @@ public class SQLitePolyStorage {
      */
     public void persistPoly(PolyRecord poly) {
         try (Connection connection = openDb()) {
+            persistPoly(connection, poly);
+        } catch (Exception e) {
+            LOG.error("Failed to import poly {} {}", poly, dbFile, e);
+        }
+    }
+
+    /**
+     * Persist poly into db
+     * @param poly
+     */
+    public void persistPoly(Connection connection, PolyRecord poly) {
+        try {
 
             String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(poly);
 
