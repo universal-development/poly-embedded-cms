@@ -255,6 +255,10 @@ public class SQLitePolyStorage {
         persistSupportPoly(PolyConstants.TAGS_POLY, polyRecord);
     }
 
+    public void persistTag(Connection connection, PolyRecord polyRecord) {
+        persistSupportPoly(connection, PolyConstants.TAGS_POLY, polyRecord);
+    }
+
     public Optional<PolyRecord> fetchTag(String tagId) {
         return fetchRawPoly(PolyConstants.TAGS_POLY, tagId);
     }
