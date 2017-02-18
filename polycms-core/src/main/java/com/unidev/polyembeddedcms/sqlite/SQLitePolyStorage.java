@@ -299,14 +299,22 @@ public class SQLitePolyStorage {
         }
     }
 
+    public Optional<PolyRecord> fetchRawPoly(String table, String id) {
+        try (Connection connection = openDb()) {
+            return fetchRawPoly(connection, table, id);
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch poly {} {} {}", table, id, dbFile, e);
+            return Optional.empty();
+        }
+    }
 
     /**
      * Fetch support poly by id
      * @return
      */
-    public Optional<PolyRecord> fetchRawPoly(String table, String id) {
+    public Optional<PolyRecord> fetchRawPoly(Connection connection, String table, String id) {
         PreparedStatement preparedStatement;
-        try (Connection connection = openDb()) {
+        try {
             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?");
             preparedStatement.setString(1, id);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -323,6 +331,15 @@ public class SQLitePolyStorage {
 
     public boolean removeRawPoly(String table, String id) {
         try (Connection connection = openDb()) {
+            return removeRawPoly(connection, table, id);
+        } catch (Exception e) {
+            LOG.error("Failed to remove poly {} {} {}", table, id, dbFile, e);
+            return false;
+        }
+    }
+
+    public boolean removeRawPoly(Connection connection, String table, String id) {
+        try {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + table + " WHERE _id = ?");
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() != 0;
