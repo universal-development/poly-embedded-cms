@@ -9,7 +9,6 @@ Current version: 0.1.1-SNAPSHOT
 
 ```
 polycms-app-hateoas - hateoas based API 
-polycms-app-web - web pages renderer 
 polycms-core - services for accessing poly records
 polycms-model - model objects
 ```
@@ -17,7 +16,7 @@ polycms-model - model objects
 License
 =======
  
-    Copyright (c) 2016 Denis O <denis@universal-development.com>
+    Copyright (c) 2016, 2017 Denis O <denis@universal-development.com>
  
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
