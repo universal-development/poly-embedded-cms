@@ -228,6 +228,10 @@ public class SQLitePolyStorage {
         persistSupportPoly(PolyConstants.CATEGORY_POLY, polyRecord);
     }
 
+    public void persistCategory(Connection connection, PolyRecord polyRecord) {
+        persistSupportPoly(connection, PolyConstants.CATEGORY_POLY, polyRecord);
+    }
+
     public Optional<PolyRecord> fetchCategory(String categoryId) {
         return fetchRawPoly(PolyConstants.CATEGORY_POLY, categoryId);
     }
@@ -324,8 +328,27 @@ public class SQLitePolyStorage {
         }
     }
 
+    /**
+     * Persist support poly in specified table
+     * @param table
+     * @param polyRecord
+     */
     public void persistSupportPoly(String table, PolyRecord polyRecord) {
         try (Connection connection = openDb()) {
+            persistSupportPoly(connection, table, polyRecord);
+        } catch (Exception e) {
+            LOG.error("Failed to import poly {} {} {}", table, polyRecord, dbFile, e);
+        }
+    }
+
+    /**
+     * Persist support poly through existing db connection
+     * @param connection
+     * @param table
+     * @param polyRecord
+     */
+    public void persistSupportPoly(Connection connection, String table, PolyRecord polyRecord) {
+        try {
 
             String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(polyRecord);
 
