@@ -5,7 +5,13 @@ Service for management of polydata records stored in different poly stores: flat
 Modules
 =======
 
-Current version: 0.1.1-SNAPSHOT
+Current version: 0.2.0-SNAPSHOT
+
+Releases:
+
+ 0.1.1 - hateaos api for fetching records 
+
+ 0.0.1 - basic functionality release
 
 ```
 polycms-app-hateoas - hateoas based API 
