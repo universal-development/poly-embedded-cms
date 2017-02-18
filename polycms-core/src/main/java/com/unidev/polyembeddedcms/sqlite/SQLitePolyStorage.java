@@ -1,12 +1,12 @@
 /**
  * Copyright (c) 2016 Denis O <denis@universal-development.com>
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -89,29 +89,44 @@ public class SQLitePolyStorage {
     }
 
     /**
-     * List poly
+     * List polys by query
      * @param polyQuery
      * @return
      */
     public List<PolyRecord> listPoly(PolyQuery polyQuery) {
-        List<PolyRecord> polyList = new ArrayList<>();
-
-        PreparedStatement preparedStatement;
-        try(Connection connection = openDb()) {
-            StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
-            preparedStatement = buildPolyQuery(polyQuery, true, connection, query);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-            while(resultSet.next()) {
-                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                polyList.add(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
-            }
-
-            return polyList;
+        try (Connection connection = openDb()) {
+            return listPoly(connection, polyQuery);
         } catch (Exception e) {
             LOG.warn("Failed to fetch polys {}", dbFile, e);
             return Collections.EMPTY_LIST;
         }
+    }
+
+    /**
+     * List poly by query
+     * @param polyQuery Poly query
+     * @param connection DB connection
+     * @return
+     */
+    public List<PolyRecord> listPoly(Connection connection, PolyQuery polyQuery) {
+        List<PolyRecord> polyList = new ArrayList<>();
+        try {
+            PreparedStatement preparedStatement;
+            StringBuilder query = new StringBuilder("SELECT * FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
+            preparedStatement = buildPolyQuery(polyQuery, true, connection, query);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
+                polyList.add(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+            }
+        }catch (Exception e) {
+            LOG.warn("Failed to fetch polys {}", dbFile, e);
+            return Collections.EMPTY_LIST;
+        }
+
+        return polyList;
+
     }
 
     /**
@@ -121,14 +136,14 @@ public class SQLitePolyStorage {
      */
     public long countPoly(PolyQuery polyQuery) {
         PreparedStatement preparedStatement;
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
             StringBuilder query = new StringBuilder("SELECT COUNT(*) as count FROM " + PolyConstants.DATA_POLY + " WHERE 1=1 ");
             preparedStatement = buildPolyQuery(polyQuery, false, connection, query);
 
             ResultSet resultSet = preparedStatement.executeQuery();
             return resultSet.getLong("count");
         } catch (Exception e) {
-            LOG.warn("Failed to fetch polys {}",dbFile, e);
+            LOG.warn("Failed to fetch polys {}", dbFile, e);
             return 0;
         }
     }
@@ -138,7 +153,7 @@ public class SQLitePolyStorage {
      * @param poly
      */
     public void persistPoly(PolyRecord poly) {
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
 
             String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(poly);
 
@@ -151,7 +166,7 @@ public class SQLitePolyStorage {
                 PreparedStatement preparedStatement = connection.prepareStatement("INSERT OR REPLACE INTO " + PolyConstants.DATA_POLY + "(_id, category, tags, data) VALUES(?, ?, ?, ?);");
                 preparedStatement.setString(1, poly._id());
                 preparedStatement.setString(2, poly.category());
-                if (  poly.tags() == null) {
+                if (poly.tags() == null) {
                     preparedStatement.setString(3, null);
                 } else {
                     preparedStatement.setString(3, String.join(",", poly.tags()));
@@ -163,7 +178,7 @@ public class SQLitePolyStorage {
                 preparedStatement.setObject(1, dataResultSet.getObject("id"));
                 preparedStatement.setString(2, poly._id());
                 preparedStatement.setString(3, poly.category());
-                preparedStatement.setString(4, String.join(",",poly.tags()));
+                preparedStatement.setString(4, String.join(",", poly.tags()));
                 preparedStatement.setObject(5, rawJSON);
                 preparedStatement.executeUpdate();
             }
@@ -225,7 +240,7 @@ public class SQLitePolyStorage {
      */
     public List<PolyRecord> fetchSupportPolys(String table) {
         PreparedStatement preparedStatement;
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " ORDER BY count DESC");
             return evaluateSupportStatement(preparedStatement);
         } catch (Exception e) {
@@ -241,7 +256,7 @@ public class SQLitePolyStorage {
      */
     public long fetchSupportPolysCount(String table) {
         PreparedStatement preparedStatement;
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
             preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS count FROM " + table + " ORDER BY count DESC");
             return preparedStatement.executeQuery().getLong("count");
         } catch (Exception e) {
@@ -251,30 +266,29 @@ public class SQLitePolyStorage {
     }
 
 
-
     /**
      * Fetch support poly by id
      * @return
      */
-     public Optional<PolyRecord> fetchRawPoly(String table, String id) {
-         PreparedStatement preparedStatement;
-         try(Connection connection = openDb()) {
-             preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?");
-             preparedStatement.setString(1, id);
-             ResultSet resultSet = preparedStatement.executeQuery();
-             if (resultSet.next()) {
-                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
-                 return Optional.of(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
-             }
-             return Optional.empty();
-         } catch (Exception e) {
-             LOG.warn("Failed to fetch support poly {} {} {}", table, id, dbFile, e);
-             return Optional.empty();
-         }
-     }
+    public Optional<PolyRecord> fetchRawPoly(String table, String id) {
+        PreparedStatement preparedStatement;
+        try (Connection connection = openDb()) {
+            preparedStatement = connection.prepareStatement("SELECT * FROM " + table + " WHERE _id = ?");
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
+                return Optional.of(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
+            }
+            return Optional.empty();
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch support poly {} {} {}", table, id, dbFile, e);
+            return Optional.empty();
+        }
+    }
 
     public boolean removeRawPoly(String table, String id) {
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " + table + " WHERE _id = ?");
             preparedStatement.setString(1, id);
             return preparedStatement.executeUpdate() != 0;
@@ -285,7 +299,7 @@ public class SQLitePolyStorage {
     }
 
     public void persistSupportPoly(String table, PolyRecord polyRecord) {
-        try(Connection connection = openDb()) {
+        try (Connection connection = openDb()) {
 
             String rawJSON = POLY_OBJECT_MAPPER.writeValueAsString(polyRecord);
 
@@ -320,13 +334,13 @@ public class SQLitePolyStorage {
         Map<Integer, Object> params = new HashMap<>();
         PreparedStatement preparedStatement;
         if (!StringUtils.isBlank(listNewPolyQuery.getCategory())) {
-            query.append(  " AND " + PolyConstants.CATEGORY_KEY + " = ?");
-            params.put(id++, listNewPolyQuery.getCategory() );
+            query.append(" AND " + PolyConstants.CATEGORY_KEY + " = ?");
+            params.put(id++, listNewPolyQuery.getCategory());
         }
 
         if (!StringUtils.isBlank(listNewPolyQuery.getTag())) {
-            query.append(  " AND " + PolyConstants.TAGS_KEY + " LIKE ?");
-            params.put(id++, "%" + listNewPolyQuery.getTag() + "%" );
+            query.append(" AND " + PolyConstants.TAGS_KEY + " LIKE ?");
+            params.put(id++, "%" + listNewPolyQuery.getTag() + "%");
         }
 
         if (includePagination) {
@@ -338,7 +352,7 @@ public class SQLitePolyStorage {
         }
 
         preparedStatement = connection.prepareStatement(query.toString());
-        for(Map.Entry<Integer, Object> entry : params.entrySet()) {
+        for (Map.Entry<Integer, Object> entry : params.entrySet()) {
             preparedStatement.setObject(entry.getKey(), entry.getValue());
         }
         return preparedStatement;
@@ -357,7 +371,7 @@ public class SQLitePolyStorage {
         try {
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
                 polyList.add(POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class));
             }
@@ -374,7 +388,7 @@ public class SQLitePolyStorage {
         try {
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 String rawJSON = resultSet.getString(PolyConstants.DATA_KEY);
                 PolyRecord polyRecord = POLY_OBJECT_MAPPER.readValue(rawJSON, PolyRecord.class);
                 polyRecord.count(resultSet.getObject("count"));
