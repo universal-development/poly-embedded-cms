@@ -19,6 +19,36 @@ polycms-core - services for accessing poly records
 polycms-model - model objects
 ```
 
+HATEAOS links
+ 
+```json
+{
+  "version": "0.2.0",
+  "data": "localhost",
+  "_links": {
+    "categories": {
+      "href": "http://localhost:8080/storage/localhost/categories"
+    },
+    "tags": {
+      "href": "http://localhost:8080/storage/localhost/tags"
+    },
+    "properties": {
+      "href": "http://localhost:8080/storage/localhost/properties"
+    },
+    "metadata": {
+      "href": "http://localhost:8080/storage/localhost/metadata"
+    },
+    "raw": {
+      "href": "http://localhost:8080/storage/localhost/raw"
+    },
+    "query": {
+      "href": "http://localhost:8080/storage/localhost/query"
+    }
+  }
+}
+
+```
+
 License
 =======
  
