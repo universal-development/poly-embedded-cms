@@ -27,7 +27,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -83,5 +85,26 @@ public class StorageQueryController {
         );
         return hateoasResponse;
     }
+
+    @PostMapping(value = "/storage/{storage}/polys", produces= MediaType.APPLICATION_JSON_VALUE)
+    public HateoasResponse fetchPolys(@PathVariable("storage") String storage, @RequestBody List<String> ids) {
+        if (!polyCore.existTenant(storage)) {
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
+        }
+        SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
+
+        Map<String, PolyRecord> response = new HashMap<>();
+        sqLitePolyStorage.fetchPolys(ids).forEach( (id, value) -> {
+            if(value.isPresent()) {
+                PolyRecord polyRecord = value.get();
+                response.put(id, polyRecord);
+            }
+        });
+        HateoasResponse hateoasResponse = hateoasResponse().data(response);
+        return hateoasResponse;
+    }
+
+
 
 }
