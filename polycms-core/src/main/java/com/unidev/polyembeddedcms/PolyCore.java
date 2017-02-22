@@ -22,11 +22,11 @@ import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.unidev.polydata.FlatFileStorageMapper.storageMapper;
-
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
+
+import static com.unidev.polydata.FlatFileStorageMapper.storageMapper;
 
 /**
  * PolyCore - Service for poly tenants management
