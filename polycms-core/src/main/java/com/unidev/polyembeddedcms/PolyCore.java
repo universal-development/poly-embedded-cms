@@ -97,9 +97,18 @@ public class PolyCore {
      * @return
      */
     public SQLitePolyStorage fetchSqliteStorage(String tenant) {
-        File tenantRoot = fetchStorageRoot(tenant);
-        File dbFile = new File(tenantRoot, PolyConstants.DB_FILE);
+        File dbFile = fetchSqliteFile(tenant);
         return new SQLitePolyStorage(dbFile.getAbsolutePath());
+    }
+
+    /**
+     * Fetch sqlite file
+     * @param tenant
+     * @return
+     */
+    public File fetchSqliteFile(String tenant) {
+        File tenantRoot = fetchStorageRoot(tenant);
+        return new File(tenantRoot, PolyConstants.DB_FILE);
     }
 
     /**
@@ -108,12 +117,17 @@ public class PolyCore {
      * @return
      */
     public FlatFileStorage fetchFlatFileStorage(String tenant) {
-        File tenantRoot = fetchStorageRoot(tenant);
-        File flatFileDB = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
+        File flatFileDB = fetchFlatFile(tenant);
         if (!flatFileDB.exists()) {
             return new FlatFileStorage();
         }
         return storageMapper().loadSource(flatFileDB).load();
+    }
+
+
+    public File fetchFlatFile(String tenant) {
+        File tenantRoot = fetchStorageRoot(tenant);
+        return new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
     }
 
     /**
@@ -122,8 +136,7 @@ public class PolyCore {
      * @param flatfileStorage
      */
     public void persistFlatFileStorage(String tenant, FlatFileStorage flatfileStorage) {
-        File tenantRoot = fetchStorageRoot(tenant);
-        File flatFileDB = new File(tenantRoot, PolyConstants.FLAT_FILE_DB);
+        File flatFileDB = fetchFlatFile(tenant);
         storageMapper().saveSource(flatFileDB).save(flatfileStorage);
     }
 

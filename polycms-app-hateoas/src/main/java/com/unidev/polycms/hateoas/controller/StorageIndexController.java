@@ -17,6 +17,7 @@ package com.unidev.polycms.hateoas.controller;
 
 import com.unidev.polycms.hateoas.vo.HateoasResponse;
 import com.unidev.polydata.FlatFileStorage;
+import com.unidev.polydata.domain.BasicPoly;
 import com.unidev.polyembeddedcms.PolyCore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,8 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.File;
 
 import static com.unidev.polycms.hateoas.vo.HateoasResponse.hateoasResponse;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -53,6 +56,7 @@ public class StorageIndexController {
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("categories").withRel("categories"),
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("tags").withRel("tags"),
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("properties").withRel("properties"),
+                linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("metadata").withRel("metadata"),
                 linkTo(StorageQueryController.class).slash("storage").slash(storage).slash("query").withRel("query")
         );
         hateoasPolyIndex.data(storage);
@@ -85,6 +89,26 @@ public class StorageIndexController {
         }
         FlatFileStorage flatFileStorage = polyCore.fetchFlatFileStorage(storage);
         return hateoasResponse().data(flatFileStorage);
+    }
+
+    @GetMapping(value = "/storage/{storage}/metadata", produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResourceSupport metadata(@PathVariable("storage") String storage) {
+        if (!polyCore.existTenant(storage)) {
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
+        }
+        BasicPoly metadata = new BasicPoly();
+        File flatFile = polyCore.fetchFlatFile(storage);
+        File sqliteFile = polyCore.fetchSqliteFile(storage);
+
+        if (flatFile != null && flatFile.exists()) {
+            metadata.put("propertiesChange", flatFile.lastModified());
+        }
+        if (sqliteFile != null && sqliteFile.exists()) {
+            metadata.put("storageChange", flatFile.lastModified());
+        }
+
+        return hateoasResponse().data(metadata);
     }
 
 }
