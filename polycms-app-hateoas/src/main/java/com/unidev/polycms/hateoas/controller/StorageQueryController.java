@@ -92,7 +92,13 @@ public class StorageQueryController {
             LOG.warn("Not found storage {}", storage);
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
+
+        if (ids.size() == 0 || ids.size() > 256) {
+            return hateoasResponse();
+        }
+
         SQLitePolyStorage sqLitePolyStorage = polyCore.fetchSqliteStorage(storage);
+
 
         Map<String, PolyRecord> response = new HashMap<>();
         sqLitePolyStorage.fetchPolys(ids).forEach( (id, value) -> {

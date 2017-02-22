@@ -51,6 +51,12 @@ HATEAOS links
 
 To transfer image db, set in metadata "storageTransferAllowed": "true" 
 
+## Example API calls
+
+```
+curl -v -X POST -d '["potato"]' -H "Content-Type: application/json"  http://localhost:8080/storage/localhost/polys
+```
+
 License
 =======
  
