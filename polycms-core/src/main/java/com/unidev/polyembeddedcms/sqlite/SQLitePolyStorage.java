@@ -24,6 +24,7 @@ import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.text.html.Option;
 import java.sql.*;
 import java.util.*;
 
@@ -70,12 +71,35 @@ public class SQLitePolyStorage {
         flyway.migrate();
     }
 
+    /**
+     * Fetch poly by id
+     * @param id
+     * @return
+     */
     public Optional<PolyRecord> fetchPoly(String id) {
         try (Connection connection = openDb()) {
             return fetchRawPoly(connection, PolyConstants.DATA_POLY, id);
         } catch (Exception e) {
             LOG.warn("Failed to fetch polys {}", dbFile, e);
             return Optional.empty();
+        }
+    }
+
+    /**
+     * Fetch polys by id
+     * @param polyIds
+     * @return
+     */
+    public Map<String, Optional<PolyRecord>> fetchPolys(Collection<String> polyIds) {
+        try (Connection connection = openDb()) {
+            Map<String, Optional<PolyRecord>> result = new HashMap<>();
+            for(String id : polyIds) {
+                result.put(id, fetchRawPoly(connection, PolyConstants.DATA_POLY, id));
+            }
+            return result;
+        } catch (Exception e) {
+            LOG.warn("Failed to fetch polys {}", dbFile, e);
+            return new HashMap<>();
         }
     }
 
