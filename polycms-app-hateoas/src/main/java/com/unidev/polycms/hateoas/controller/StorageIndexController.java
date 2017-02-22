@@ -16,6 +16,7 @@
 package com.unidev.polycms.hateoas.controller;
 
 import com.unidev.polycms.hateoas.vo.HateoasResponse;
+import com.unidev.polydata.FlatFileStorage;
 import com.unidev.polyembeddedcms.PolyCore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,6 +52,7 @@ public class StorageIndexController {
         hateoasPolyIndex.add(
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("categories").withRel("categories"),
                 linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("tags").withRel("tags"),
+                linkTo(StorageIndexController.class).slash("storage").slash(storage).slash("properties").withRel("properties"),
                 linkTo(StorageQueryController.class).slash("storage").slash(storage).slash("query").withRel("query")
         );
         hateoasPolyIndex.data(storage);
@@ -73,6 +75,16 @@ public class StorageIndexController {
             throw new StorageNotFoundException("Storage " + storage + " not found");
         }
         return hateoasResponse().data(polyCore.fetchSqliteStorage(storage).listTags());
+    }
+
+    @GetMapping(value = "/storage/{storage}/properties", produces= MediaType.APPLICATION_JSON_VALUE)
+    public ResourceSupport properties(@PathVariable("storage") String storage) {
+        if (!polyCore.existTenant(storage)) {
+            LOG.warn("Not found storage {}", storage);
+            throw new StorageNotFoundException("Storage " + storage + " not found");
+        }
+        FlatFileStorage flatFileStorage = polyCore.fetchFlatFileStorage(storage);
+        return hateoasResponse().data(flatFileStorage);
     }
 
 }
