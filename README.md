@@ -49,6 +49,8 @@ HATEAOS links
 
 ```
 
+To transfer image db, set in metadata "storageTransferAllowed": "true" 
+
 License
 =======
  
